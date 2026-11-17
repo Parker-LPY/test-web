@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>人生参数空间 · Life Parameter Space</title>
+<meta name="description" content="人生参数空间 V1.1：36 题、6 维坐标、12 种原型。找到你现在的位置，而不是定义你是谁。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23183B56'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%233AA6B9' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%233AA6B9'/%3E%3Cpath d='M16 4v3M16 25v3M4 16h3M25 16h3' stroke='%23EAF3F8' stroke-width='1.4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --brand-900:#183B56;--brand-800:#1C4A6B;--brand-600:#2878B5;--brand-700:#216BA3;
+  --accent:#3AA6B9;--surface-100:#EAF3F8;--surface-50:#F7FAFC;
+  --ink:#1F2937;--ink-soft:#3D4A5C;--muted:#667085;
+  --line:rgba(24,59,86,.13);--line-strong:rgba(24,59,86,.24);
+  --success:#2E8B57;--warn:#D97706;--error:#B42318;
+  --r-sm:8px;--r-md:12px;--r-lg:16px;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --maxw:1180px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--surface-50);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.7;font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img,svg{display:block;max-width:100%}
+button{font-family:inherit}
+a{color:inherit}
+::selection{background:rgba(58,166,185,.22)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+.grid-layer{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:linear-gradient(to right,rgba(24,59,86,.055) 1px,transparent 1px),linear-gradient(to bottom,rgba(24,59,86,.055) 1px,transparent 1px);
+  background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(115% 85% at 68% -5%,#000 0%,rgba(0,0,0,.55) 42%,transparent 78%);
+  mask-image:radial-gradient(115% 85% at 68% -5%,#000 0%,rgba(0,0,0,.55) 42%,transparent 78%)}
+.glow{position:fixed;z-index:-1;pointer-events:none;top:-220px;right:-180px;width:720px;height:720px;border-radius:50%;
+  background:radial-gradient(circle,rgba(58,166,185,.16),rgba(58,166,185,.05) 45%,transparent 68%)}
+
+/* ===== 基础排版 ===== */
+.shell{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.h1{font-size:clamp(34px,5vw,54px);line-height:1.22;letter-spacing:-.02em;font-weight:700;margin:0;color:var(--brand-900)}
+.h2{font-size:clamp(24px,3vw,32px);line-height:1.32;letter-spacing:-.015em;font-weight:700;margin:0;color:var(--brand-900)}
+.h3{font-size:18px;font-weight:600;line-height:1.55;margin:0;color:var(--brand-900)}
+.lead{font-size:17px;line-height:1.8;color:var(--ink-soft);margin:0}
+.small{font-size:14px;line-height:1.7;color:var(--muted);margin:0}
+[hidden]{display:none!important}
+.micro{font-size:12.5px;line-height:1.6;color:var(--muted);margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.hair{height:1px;background:var(--line);border:0;margin:0}
+
+/* ===== 按钮 ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:48px;padding:0 24px;border-radius:var(--r-sm);
+  border:1px solid transparent;background:#fff;color:var(--brand-900);font-size:15px;font-weight:500;line-height:1;cursor:pointer;
+  transition:background .18s,border-color .18s,color .18s,transform .1s}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--brand-600);color:#fff}
+.btn-primary:hover:not(:disabled){background:var(--brand-700)}
+.btn-ghost{border-color:var(--line-strong);background:transparent}
+.btn-ghost:hover:not(:disabled){border-color:var(--brand-600);color:var(--brand-600)}
+.btn-dark{background:var(--brand-900);color:#fff}
+.btn-dark:hover:not(:disabled){background:#122f45}
+.btn-sm{height:38px;padding:0 16px;font-size:13.5px;border-radius:7px}
+.btn-block{width:100%}
+.btn-link{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:4px 2px;color:var(--brand-600);font-size:14px;cursor:pointer;border-bottom:1px solid transparent}
+.btn-link:hover{border-bottom-color:var(--brand-600);color:var(--brand-700)}
+.icon{width:18px;height:18px;stroke:currentColor;stroke-width:1.7;fill:none;flex:none}
+.icon-sm{width:15px;height:15px}
+
+/* ===== 顶栏 ===== */
+.site-head{position:sticky;top:0;z-index:50;background:rgba(247,250,252,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.head-inner{height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--brand-900);min-width:0}
+.brand svg{width:26px;height:26px;flex:none}
+.brand-txt{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.brand-en{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;font-weight:500;color:var(--brand-900);white-space:nowrap}
+.brand-cn{font-size:12px;color:var(--muted);letter-spacing:.04em;margin-top:2px}
+.head-nav{display:flex;align-items:center;gap:4px}
+.head-nav button{background:none;border:0;color:var(--muted);font-size:13.5px;padding:8px 12px;border-radius:6px;cursor:pointer}
+.head-nav button:hover{color:var(--brand-900);background:rgba(234,243,248,.8)}
+
+/* ===== 通用区块 ===== */
+.section{padding:64px 0}
+.section-tight{padding:40px 0}
+.stack-md{display:flex;flex-direction:column;gap:18px}
+.stack-lg{display:flex;flex-direction:column;gap:32px}
+
+/* ===== 开始页 ===== */
+.start-hero{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:56px;align-items:end;padding:76px 0 56px}
+.hero-copy{max-width:660px}
+.hero-axes{width:100%;max-width:470px;padding-top:12px;border-top:1px solid var(--line-strong)}
+.hero-axes .axes-cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+.hero-axes ul{list-style:none;margin:12px 0 0;padding:0}
+.hero-axes li{display:grid;grid-template-columns:20px 68px minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
+.hero-axes li:last-child{border-bottom:0}
+.hero-axes li b{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--brand-600)}
+.hero-axes li span{font-size:13.5px;color:var(--ink)}
+.hero-axes li i{font-style:normal;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#98A2B3}
+.hero-axes li em{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--muted);white-space:nowrap}
+.hero-copy .eyebrow{margin-bottom:20px}
+.hero-sub{font-size:17.5px;line-height:1.85;color:var(--ink-soft);margin:22px 0 0;max-width:34em}
+.hero-cta{display:flex;align-items:center;gap:18px;margin-top:34px}
+.hero-meta{display:flex;gap:16px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.hero-meta span{font-size:12.5px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.hero-meta span::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.75}
+
+.stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line)}
+.stat{padding:20px 20px 18px;border-right:1px solid var(--line)}
+.stat:first-child{padding-left:0}
+.stat:last-child{border-right:0;padding-right:0}
+.stat b{display:block;font-family:var(--mono);font-size:27px;font-weight:500;color:var(--brand-900);letter-spacing:-.02em;line-height:1.2}
+.stat span{display:block;font-size:13px;color:var(--muted);margin-top:5px}
+
+.intro-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:40px;align-items:start}
+.note-card{background:var(--surface-100);border-radius:var(--r-md);padding:26px 28px;border:1px solid rgba(24,59,86,.08)}
+.note-card h3{font-size:15px;font-weight:600;color:var(--brand-900);margin:0 0 14px;display:flex;align-items:center;gap:8px}
+.note-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.note-list li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:14.5px;line-height:1.65;color:var(--ink-soft)}
+.note-list .idx{font-family:var(--mono);font-size:11px;color:var(--brand-600);padding-top:3px}
+.preview-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:26px 28px}
+.preview-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:16px}
+.preview-list{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;margin:0;padding:0;list-style:none}
+.preview-list li{font-size:13.5px;color:var(--ink-soft);padding:7px 0;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:baseline}
+.preview-list li::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--accent);flex:none;transform:translateY(-2px)}
+
+.disclaimer-bar{display:flex;align-items:flex-start;gap:12px;border-left:2px solid rgba(24,59,86,.3);padding:6px 0 6px 16px;margin-top:44px;max-width:820px}
+.disclaimer-bar .icon{color:var(--brand-900);margin-top:3px}
+.disclaimer-bar p{font-size:13px;line-height:1.75;color:var(--muted);margin:0}
+
+/* ===== 开始页补充 ===== */
+.draft-banner{margin-top:22px;display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;background:var(--surface-100);border:1px solid rgba(24,59,86,.1);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--ink-soft)}
+.draft-banner .mono{color:var(--brand-900);font-size:13px}
+.draft-actions{display:flex;gap:8px;flex:none}
+
+/* ===== 背景页 ===== */
+.field-head{display:flex;justify-content:flex-start;align-items:baseline;gap:12px;margin-bottom:12px}
+.chip-select{display:flex;flex-wrap:wrap;gap:9px}
+.sel-chip{height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--line-strong);background:#fff;font-size:14px;color:var(--ink);cursor:pointer;transition:border-color .16s,background .16s,color .16s}
+.sel-chip:hover{border-color:var(--brand-600);color:var(--brand-600)}
+.sel-chip[aria-pressed="true"]{border:2px solid var(--brand-600);background:#F2F9FD;color:var(--brand-900);padding:0 17px;font-weight:500}
+.sel-chip[aria-pressed="true"]::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand-600);margin-right:7px;vertical-align:middle}
+.field{display:flex;flex-direction:column;gap:8px}
+.bg-actions{display:flex;align-items:center;gap:22px;margin-top:34px;flex-wrap:wrap}
+
+/* ===== 答题 ===== */
+.quiz-wrap{max-width:720px;margin:0 auto;padding:32px 0 0}
+.quiz-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;gap:12px}
+.quiz-count{font-family:var(--mono);font-size:13px;color:var(--brand-900);letter-spacing:.04em}
+.quiz-count em{font-style:normal;color:var(--muted)}
+.quiz-page{font-size:12px;color:var(--muted)}
+.progress{height:3px;background:var(--surface-100);border-radius:2px;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand-600),var(--accent));transition:width .35s ease}
+.q-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:34px 36px 30px;margin-top:30px}
+.q-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.q-idx{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--muted)}
+.q-tag{font-size:11.5px;color:var(--brand-600);background:var(--surface-100);padding:3px 9px;border-radius:20px;letter-spacing:.02em}
+.q-text{font-size:19.5px;line-height:1.68;font-weight:500;color:var(--ink);margin:0 0 26px;max-width:42em}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;min-height:56px;padding:13px 16px;border:1px solid var(--line-strong);border-radius:10px;background:#fff;
+  text-align:left;cursor:pointer;font-size:15.5px;line-height:1.5;color:var(--ink);transition:border-color .16s,background .16s,box-shadow .16s}
+.opt:hover{border-color:var(--brand-600);background:#FBFDFE}
+.opt[aria-checked="true"]{border:2px solid var(--brand-600);background:#F2F9FD;padding:12px 15px}
+.opt .onum{flex:none;width:26px;height:26px;border-radius:6px;background:var(--surface-100);color:var(--brand-900);font-family:var(--mono);font-size:12px;display:grid;place-items:center;font-weight:500}
+.opt[aria-checked="true"] .onum{background:var(--brand-600);color:#fff}
+.opt .olabel{flex:1;min-width:0}
+.opt .mark{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line-strong);display:grid;place-items:center;color:transparent;transition:all .16s}
+.opt[aria-checked="true"] .mark{background:var(--brand-600);border-color:var(--brand-600);color:#fff}
+.q-err{display:none;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--warn)}
+.q-err.show{display:flex}
+.quiz-bar{position:sticky;bottom:0;z-index:20;background:rgba(247,250,252,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:14px 0;margin-top:26px}
+.quiz-bar-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:720px;margin:0 auto}
+.quiz-key{font-size:11.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.02em;display:none}
+@media(min-width:900px){.quiz-key{display:block}}
+.quiz-nav{display:flex;gap:10px;margin-left:auto}
+
+/* ===== 计算中 ===== */
+.calc-wrap{max-width:560px;margin:0 auto;padding:120px 0 140px;text-align:center}
+.calc-steps{display:flex;flex-direction:column;gap:16px;margin-top:40px;text-align:left}
+.calc-step{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--r-md);background:#fff;opacity:.42;transition:opacity .3s,border-color .3s}
+.calc-step.active{opacity:1;border-color:rgba(58,166,185,.45)}
+.calc-step.done{opacity:1}
+.calc-step .st{flex:none;width:22px;height:22px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;color:transparent}
+.calc-step.active .st{border-color:var(--brand-600);border-top-color:transparent;animation:spin .9s linear infinite}
+.calc-step.done .st{background:var(--success);border-color:var(--success);color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+.calc-step .lbl{font-size:15px;color:var(--ink)}
+.calc-ring{width:52px;height:52px;margin:0 auto;border-radius:50%;border:1px solid rgba(58,166,185,.35);display:grid;place-items:center}
+.calc-ring::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 6px rgba(58,166,185,.12)}
+
+/* ===== 结果摘要 ===== */
+.plate{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:28px 32px}
+.plate-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:22px}
+.plate-head h3{font-size:15px;font-weight:600;color:var(--brand-900);margin:0;letter-spacing:.01em}
+.plate-head .mono{font-size:11px;color:var(--muted);letter-spacing:.1em}
+
+.scale{padding:14px 0;border-bottom:1px solid var(--line)}
+.scale:last-child{border-bottom:0;padding-bottom:4px}
+.scale-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.scale-name{display:flex;align-items:baseline;gap:8px;min-width:0}
+.scale-code{font-family:var(--mono);font-size:11px;color:var(--brand-600);width:14px;flex:none}
+.scale-cn{font-size:14px;color:var(--ink-soft);font-weight:500}
+.scale-en{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.scale-right{display:flex;align-items:baseline;gap:9px;flex:none}
+.scale-score{font-family:var(--mono);font-size:19px;font-weight:500;color:var(--brand-900);letter-spacing:-.02em;line-height:1}
+.scale-band{font-size:11.5px;color:var(--muted);padding:2px 8px;border:1px solid var(--line);border-radius:20px;white-space:nowrap}
+.scale-line{display:grid;grid-template-columns:60px minmax(0,1fr) 60px;align-items:center;gap:10px}
+.end{font-size:12px;color:var(--muted)}
+.end.right{text-align:right}
+.track{position:relative;height:22px;display:flex;align-items:center}
+.track .rail{position:absolute;left:0;right:0;height:4px;border-radius:2px;background:var(--surface-100)}
+.track .rail::after{content:"";position:absolute;inset:0;border-radius:2px;background-image:linear-gradient(to right,rgba(24,59,86,.16) 1px,transparent 1px);background-size:10% 100%}
+.track .fill{position:absolute;height:4px;border-radius:2px;background:linear-gradient(90deg,rgba(40,120,181,.45),var(--brand-600))}
+.track .mid{position:absolute;left:50%;top:50%;width:1px;height:12px;background:rgba(24,59,86,.28);transform:translate(-50%,-50%)}
+.track .dot{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--brand-600);border:2px solid #fff;transform:translate(-50%,-50%);box-shadow:0 1px 6px rgba(24,59,86,.3);transition:left .6s cubic-bezier(.2,.8,.2,1)}
+.scale .hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6;display:none}
+
+.radar-wrap{display:flex;align-items:center;justify-content:center;padding:4px 0}
+
+/* ===== 完整报告 ===== */
+.report-wrap{padding:40px 0 80px}
+.report-grid{display:grid;grid-template-columns:minmax(0,1fr) 296px;grid-template-areas:"main toc";gap:40px;align-items:start}
+.report-main{grid-area:main;min-width:0}
+.report-toc{grid-area:toc;position:sticky;top:88px;padding-top:8px}
+.toc-title{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+.toc-nav{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.toc-nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;font-size:12.5px;color:var(--muted);padding:6px 0 6px 10px;border-left:1px solid var(--line);transition:color .2s,border-color .2s}
+.toc-nav a:hover{color:var(--brand-900)}
+.toc-nav a.on{color:var(--brand-900);border-left-color:var(--brand-600);font-weight:500}
+.toc-nav a .n{font-family:var(--mono);font-size:9.5px;color:#98a2b3;flex:none}
+
+.rep-hero{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:36px 38px;display:grid;grid-template-columns:minmax(0,1fr) 252px;gap:44px;align-items:start}
+.rep-hero-main{min-width:0}
+.rep-side{border-left:1px solid var(--line);padding-left:28px}
+.side-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--muted);margin:0 0 4px}
+.side-row{display:flex;align-items:baseline;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.side-row .n{font-family:var(--mono);font-size:9.5px;color:var(--muted);width:16px;flex:none}
+.side-row .nm{flex:1;font-size:14px;color:var(--brand-900);line-height:1.4}
+.side-row .sim{font-family:var(--mono);font-size:14px;color:var(--brand-600);letter-spacing:-.01em}
+.side-row.on .nm{font-weight:600}
+.side-note{font-size:11px;line-height:1.75;color:var(--muted);margin-top:12px}
+.rep-hero .eyebrow{color:var(--brand-600)}
+.rep-you{font-family:var(--mono);font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-.03em;color:var(--brand-900);font-weight:500;margin-top:14px}
+.rep-you small{display:block;font-family:var(--sans);font-size:13px;letter-spacing:.04em;color:var(--muted);margin-top:10px;font-weight:400}
+.rep-name{font-size:clamp(24px,3.4vw,32px);font-weight:700;color:var(--brand-900);margin-top:20px;letter-spacing:-.015em}
+.rep-name span{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.1em;color:var(--muted);margin-left:10px;text-transform:uppercase}
+.rep-sum{font-size:16px;line-height:1.8;color:var(--ink-soft);margin-top:12px;max-width:38em}
+.rep-meta{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:22px;padding-top:16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+.rep-meta span{display:inline-flex;align-items:center;gap:6px}
+
+.plate-grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:26px;align-items:center}
+.plate-radar{border-left:1px solid var(--line);padding-left:24px}
+.plate-radar .mono{font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+
+.sec{padding:44px 0 8px;scroll-margin-top:88px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;padding-bottom:12px;border-bottom:1px solid var(--line-strong)}
+.sec-n{font-family:var(--mono);font-size:11px;color:var(--brand-600);letter-spacing:.06em}
+.sec-head h2{font-size:22px;font-weight:700;color:var(--brand-900);margin:0;letter-spacing:-.01em}
+.sec-head p{font-size:12.5px;color:var(--muted);margin:0 0 0 auto;text-align:right}
+.body-txt{font-size:15px;line-height:1.85;color:var(--ink-soft);max-width:44em}
+.body-txt p{margin:0 0 14px}
+.body-txt p:last-child{margin-bottom:0}
+
+.arch-primary{background:var(--brand-900);color:#fff;border-radius:var(--r-lg);padding:32px 34px;position:relative;overflow:hidden}
+.arch-primary::after{content:"";position:absolute;right:-40px;bottom:-80px;width:230px;height:230px;border-radius:50%;border:1px solid rgba(58,166,185,.25)}
+.arch-primary .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;position:relative;z-index:1}
+.arch-primary h3{font-size:26px;font-weight:700;margin:0;color:#fff;letter-spacing:-.01em}
+.arch-primary h3 span{display:block;font-family:var(--mono);font-size:10.5px;font-weight:400;letter-spacing:.14em;color:rgba(234,243,248,.6);margin-top:8px;text-transform:uppercase}
+.arch-primary .sim{text-align:right;flex:none}
+.arch-primary .sim b{font-family:var(--mono);font-size:26px;font-weight:500;color:#fff;line-height:1}
+.arch-primary .sim span{display:block;font-size:10.5px;color:rgba(234,243,248,.55);margin-top:4px;letter-spacing:.04em}
+.arch-primary .desc{font-size:14px;line-height:1.8;color:rgba(255,255,255,.86);margin:18px 0 0;position:relative;z-index:1;max-width:40em}
+.arch-primary .combo{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;position:relative;z-index:1}
+.arch-primary .combo span{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border:1px solid rgba(234,243,248,.28);border-radius:20px;color:rgba(234,243,248,.85)}
+
+.arch-mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.arch-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:20px 22px}
+.arch-card .hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.arch-card h4{font-size:16.5px;font-weight:600;color:var(--brand-900);margin:0}
+.arch-card .sim{font-family:var(--mono);font-size:13px;color:var(--text-600);color:var(--muted)}
+.arch-card p{font-size:13.2px;line-height:1.72;color:var(--ink-soft);margin:8px 0 0}
+
+.ix-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ix-grid > .ix-card:only-child{grid-column:1/-1}
+.ix-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:20px 22px}
+.ix-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.ix-pair{display:flex;gap:6px;flex:none}
+.ix-pair em{font-family:var(--mono);font-size:10.5px;font-style:normal;padding:2px 7px;border-radius:4px;background:var(--surface-100);color:var(--brand-900)}
+.ix-pair em.lo{background:#fff;border:1px solid var(--line-strong);color:var(--muted)}
+.ix-card h4{font-size:15.5px;font-weight:600;color:var(--brand-900);margin:0}
+.ix-card p{font-size:13.4px;line-height:1.7;color:var(--ink-soft);margin:6px 0 0}
+.ix-card .ex{font-size:12.5px;line-height:1.65;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.ix-card .ex b{color:var(--brand-900);font-weight:500}
+
+.tension{border-left:3px solid var(--warn);background:#FFFCF7;border-radius:0 var(--r-md) var(--r-md) 0;padding:20px 22px;margin-top:14px}
+.tension h4{font-size:15.5px;font-weight:600;color:#8a4a06;margin:0 0 8px}
+.tension p{font-size:13.4px;line-height:1.75;color:var(--ink-soft);margin:0 0 8px}
+.tension .kv{display:grid;grid-template-columns:64px minmax(0,1fr);gap:6px 12px;font-size:12.5px;color:var(--muted);margin-top:8px}
+.tension .kv b{font-weight:500;color:var(--ink-soft)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font-size:12.5px;padding:6px 12px;border-radius:20px;border:1px solid var(--line-strong);color:var(--ink-soft);background:#fff}
+.chip.dark{background:var(--surface-100);border-color:transparent;color:var(--brand-900)}
+.chip.bad{border-color:rgba(180,35,24,.2);color:#8a2a20;background:#FEF6F5}
+
+.zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.zone{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:22px 24px}
+.zone h4{font-size:14px;font-weight:600;margin:0 0 4px;color:var(--brand-900);display:flex;align-items:center;gap:8px}
+.zone .en{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.zone p{font-size:13.2px;line-height:1.7;color:var(--ink-soft);margin:8px 0 0}
+
+.shadow-card{border-left:3px solid var(--warn);background:#fff;border-radius:0 var(--r-md) var(--r-md) 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 26px}
+.shadow-card .lead-s{font-size:15px;line-height:1.8;color:var(--ink);margin:0 0 12px}
+.shadow-card .kv{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px 14px;font-size:13px;line-height:1.7;color:var(--ink-soft)}
+.shadow-card .kv b{font-weight:500;color:var(--muted);font-size:12px;padding-top:2px}
+
+.cap-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.cap-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:22px 24px}
+.cap-card .t{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.cap-card .t .icon{color:var(--brand-600)}
+.cap-card h4{font-size:14.5px;font-weight:600;color:var(--brand-900);margin:0}
+.cap-card p{font-size:13.2px;line-height:1.75;color:var(--ink-soft);margin:0}
+
+.futures{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line-strong)}
+.future{display:grid;grid-template-columns:52px minmax(0,1fr);gap:18px;padding:22px 0;border-bottom:1px solid var(--line)}
+.future .fn{font-family:var(--mono);font-size:12px;color:var(--brand-600);padding-top:4px}
+.future h4{font-size:16.5px;font-weight:600;color:var(--brand-900);margin:0 0 6px}
+.future p{font-size:13.6px;line-height:1.75;color:var(--ink-soft);margin:0 0 8px}
+.future .sig{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+.future .sig span{display:inline-flex;gap:6px;align-items:baseline}
+.future .sig b{font-weight:500;color:var(--ink-soft);flex:none;white-space:nowrap}
+
+.qa-list{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.qa{display:grid;grid-template-columns:24px minmax(0,1fr);gap:12px}
+.qa .qn{font-family:var(--mono);font-size:11px;color:var(--brand-600);padding-top:4px}
+.qa p{font-size:14.5px;line-height:1.75;color:var(--ink);margin:0}
+
+.action-card{background:var(--surface-100);border-radius:var(--r-md);padding:24px 26px;border:1px solid rgba(24,59,86,.08)}
+.action-card .flag{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-family:var(--mono);letter-spacing:.08em;color:var(--muted);border:1px solid var(--line-strong);padding:3px 8px;border-radius:20px;background:#fff}
+.action-card h4{font-size:15px;font-weight:600;color:var(--brand-900);margin:12px 0 10px}
+.action-item{display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid rgba(24,59,86,.1)}
+.action-item .icon{color:var(--brand-600);margin-top:3px}
+.action-item p{font-size:13.4px;line-height:1.72;color:var(--ink-soft);margin:0}
+.action-item .stop{font-size:12px;color:var(--muted);margin-top:4px}
+
+.deliver-panel{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:26px 28px;margin-top:8px}
+.deliver-panel h3{font-size:16px;font-weight:600;color:var(--brand-900);margin:0 0 16px}
+.deliver-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.dstat{border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px}
+.dstat .k{font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.dstat .v{font-family:var(--mono);font-size:13.5px;color:var(--brand-900);margin-top:6px;word-break:break-all;line-height:1.5}
+.share-box{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.share-box .small{flex:1;min-width:120px}
+.mail-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.input{flex:1;min-width:180px;height:44px;border:1px solid var(--line-strong);border-radius:var(--r-sm);padding:0 14px;font-family:inherit;font-size:14px;background:#fff;color:var(--ink)}
+.input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--brand-600)}
+.end-note{border-top:1px solid var(--line-strong);margin-top:40px;padding-top:24px}
+.end-note p{font-size:13.5px;line-height:1.8;color:var(--muted);margin:0 0 10px}
+.end-note .mono{font-size:10.5px;letter-spacing:.1em;color:#98a2b3}
+
+/* ===== 报告细节组件 ===== */
+.dim-detail{border:1px solid var(--line);border-radius:10px;background:#fff;margin-top:8px;overflow:hidden}
+.dim-detail summary{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;list-style:none}
+.dim-detail summary::-webkit-details-marker{display:none}
+.dim-detail summary:hover{background:#FBFDFE}
+.dm-code{font-family:var(--mono);font-size:11px;color:var(--brand-600);width:14px;flex:none}
+.dm-name{font-size:14px;color:var(--ink);font-weight:500}
+.dm-band{font-size:11.5px;color:var(--muted);margin-left:auto;white-space:nowrap}
+.dm-cue{font-size:11.5px;color:var(--brand-600);flex:none}
+.dim-detail[open] .dm-cue{color:var(--muted)}
+.dim-body{padding:2px 16px 12px;border-top:1px solid var(--line)}
+.dr{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.dr:last-child{border-bottom:0}
+.dk{font-size:12px;color:var(--muted)}
+.dr p{font-size:13.2px;line-height:1.7;color:var(--ink-soft);margin:0}
+
+.mini{display:grid;grid-template-columns:14px minmax(0,1fr) 30px;grid-template-areas:"k n v" "t t t";gap:3px 8px;align-items:center;margin-top:10px}
+.mk{grid-area:k;font-family:var(--mono);font-size:10px;color:var(--brand-600)}
+.mn{grid-area:n;font-size:12px;color:var(--ink-soft)}
+.mv{grid-area:v;font-family:var(--mono);font-size:11px;color:var(--brand-900);text-align:right}
+.mt{grid-area:t;position:relative;height:4px;background:var(--surface-100);border-radius:2px;margin-top:3px}
+.mt i{position:absolute;top:50%;width:7px;height:7px;border-radius:50%;background:var(--brand-600);border:1.5px solid #fff;transform:translate(-50%,-50%)}
+.mrail{display:none}
+.mfill{position:absolute;height:4px;border-radius:2px;background:rgba(40,120,181,.45)}
+.ix-minis{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+
+.minute{background:var(--surface-100);border-radius:var(--r-md);padding:20px 24px;border-left:2px solid var(--brand-600)}
+.minute .mono{font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.minute ul{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.minute li{font-size:13.6px;line-height:1.7;color:var(--ink-soft)}
+.minute b{font-weight:600;color:var(--brand-900);margin-right:4px}
+
+.stage-note{margin-top:18px;padding:16px 20px;background:#fff;border:1px solid var(--line);border-radius:var(--r-md)}
+.stage-note .mono{font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.stage-note p{font-size:13.4px;line-height:1.75;color:var(--ink-soft);margin:6px 0 0}
+
+/* ===== 弹层 ===== */
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(16,32,45,.44);backdrop-filter:blur(4px)}
+.modal.open{display:flex}
+.modal-panel{background:#fff;border-radius:var(--r-lg);max-width:680px;width:100%;max-height:82vh;overflow:auto;padding:32px 34px;position:relative}
+.modal-panel h3{font-size:20px;font-weight:700;color:var(--brand-900);margin:0 0 14px}
+.modal-panel h4{font-size:14px;font-weight:600;color:var(--brand-900);margin:20px 0 6px}
+.modal-panel p{font-size:13.5px;line-height:1.8;color:var(--ink-soft);margin:0 0 10px}
+.modal-close{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer;display:grid;place-items:center;color:var(--muted)}
+.modal-close:hover{color:var(--brand-900);border-color:var(--line-strong)}
+.qa-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12px;margin-top:8px}
+.qa-table col.c1{width:24%}.qa-table col.c2{width:22%}.qa-table col.c3{width:26%}.qa-table col.c4{width:18%}.qa-table col.c5{width:10%}
+.qa-table th,.qa-table td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.55}
+.qa-table th{font-weight:500;color:var(--muted);font-size:11px;font-family:var(--mono);letter-spacing:.04em}
+.qa-table td.pass{color:var(--success);font-weight:600}
+.qa-table td.fail{color:var(--error);font-weight:600}
+.qa-pre{background:var(--surface-50);border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.7;color:var(--ink-soft);overflow:auto;white-space:pre-wrap}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);z-index:120;background:var(--brand-900);color:#fff;font-size:13.5px;padding:12px 20px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===== 页脚 ===== */
+.site-foot{border-top:1px solid var(--line);margin-top:60px;padding:26px 0 34px;background:rgba(247,250,252,.6)}
+.foot-inner{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;justify-content:space-between}
+.foot-inner .small{font-size:12px}
+.foot-links{display:flex;flex-wrap:wrap;gap:4px}
+.foot-links button{background:none;border:0;color:var(--muted);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:4px}
+.foot-links button:hover{color:var(--brand-900);background:var(--surface-100)}
+
+/* ===== 视图切换 ===== */
+.view[hidden]{display:none}
+
+/* ===== 响应式 ===== */
+@media(max-width:1024px){
+  .report-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"toc" "main";gap:18px}
+  .report-toc{position:sticky;top:64px;z-index:30;min-width:0;background:var(--surface-50);padding:10px 0;margin:0;border-bottom:1px solid var(--line)}
+  .toc-title{display:none}
+  .toc-nav{flex-direction:row;overflow-x:auto;gap:6px;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 26px),transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 26px),transparent 100%)}
+  .toc-nav::-webkit-scrollbar{display:none}
+  .toc-nav a{border-left:0;border-bottom:2px solid transparent;padding:5px 9px;white-space:nowrap;font-size:12px}
+  .toc-nav a.on{border-left-color:transparent;border-bottom-color:var(--brand-600)}
+  .toc-nav a .n{display:none}
+  .plate-grid{grid-template-columns:1fr;gap:0}
+  .plate-radar{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:16px;margin-top:8px;display:flex;flex-direction:column;align-items:center}
+}
+@media(max-width:900px){
+  .start-hero{padding:44px 0 36px;grid-template-columns:1fr}
+  .rep-hero{grid-template-columns:1fr;gap:22px}
+  .rep-side{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:16px}
+  .hero-axes{display:none}
+  .intro-grid{grid-template-columns:1fr}
+  .ix-grid{grid-template-columns:1fr}
+  .cap-grid{grid-template-columns:1fr}
+  .zone-grid{grid-template-columns:1fr}
+  .arch-mini{grid-template-columns:1fr}
+  .deliver-grid{grid-template-columns:1fr}
+  .toc-list{columns:1}
+  .sum-lower{grid-template-columns:1fr!important}
+}
+@media(max-width:640px){
+  .shell{padding:0 16px}
+  .rep-side{display:none}
+  .rep-hero{gap:0}
+  .preview-list{grid-template-columns:1fr}
+  .stat span{font-size:12px}
+  .head-inner{height:58px}
+  .brand-en{font-size:9.5px;letter-spacing:.1em}
+  .brand-cn{font-size:11px}
+  .head-nav button{padding:8px;font-size:12.5px}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .stat{padding:16px 16px 14px;border-bottom:1px solid var(--line)}
+  .stat:first-child{padding-left:16px}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(3){border-bottom:0}
+  .stat:nth-child(4){border-bottom:0;border-right:0;padding-right:16px}
+  .stat b{font-size:23px}
+  .hero-cta{flex-direction:column;align-items:stretch;gap:12px}
+  .hero-cta .btn{width:100%}
+  .q-card{padding:24px 20px 22px;border-radius:var(--r-md);margin-top:22px}
+  .q-text{font-size:18px;margin-bottom:20px}
+  .opt{min-height:54px;font-size:15px}
+  .quiz-bar-inner{padding:0 16px}
+  .quiz-nav{width:100%}
+  .quiz-nav .btn{flex:1}
+  .quiz-page{display:none}
+  .sum-you{font-size:44px}
+  .plate{padding:20px 18px}
+  .plate-head{flex-direction:column;gap:4px;align-items:flex-start}
+  .scale-line{grid-template-columns:52px minmax(0,1fr) 52px;gap:8px}
+  .scale-score{font-size:17px}
+  .scale-band{font-size:11px}
+  .scale-en{display:none}
+  .rep-hero{padding:26px 22px}
+  .arch-primary{padding:26px 22px}
+  .sec-head p{display:none}
+  .future{grid-template-columns:36px minmax(0,1fr);gap:12px}
+  .share-box .btn{width:100%}
+  .modal-panel{padding:26px 20px}
+  .qa-table{font-size:10.5px}
+  .qa-table col.c2{width:20%}
+  .foot-inner{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:380px){
+  .q-text{font-size:17px}
+  .opt{font-size:14.2px;padding:12px 12px}
+  .scale-band{display:none}
+}
+
+/* ===== 打印 ===== */
+@media print{
+  @page{margin:14mm}
+  .grid-layer,.glow,.site-head,.site-foot,.report-toc,.quiz-bar,.no-print,.modal,.toast{display:none!important}
+  body{background:#fff}
+  .view[hidden]{display:none}
+  .report-wrap{padding:0}
+  .report-grid{display:block}
+  .rep-hero,.plate,.arch-primary,.arch-card,.ix-card,.zone,.cap-card,.deliver-panel,.action-card{border-color:#d5dde5!important;box-shadow:none!important}
+  .arch-primary{background:#fff!important;color:#183B56!important;border:1px solid #b8c6d3}
+  .arch-primary h3,.arch-primary .sim b{color:#183B56!important}
+  .arch-primary .desc{color:#3D4A5C!important}
+  .arch-primary .combo span{color:#3D4A5C!important;border-color:#c9d6e2!important}
+  .arch-primary h3 span{color:#2878B5!important}
+  .arch-primary .sim span{color:#667085!important}
+  .arch-primary::after{border-color:#c9d6e2!important}
+  .dim-detail,.minute,.shadow,.future-row,.deliver-panel{break-inside:avoid}
+  .dm-cue{display:none!important}
+  .dim-detail summary{padding:9px 14px}
+  .dim-body{padding:0 14px 6px}
+  .dr{padding:5px 0;grid-template-columns:66px minmax(0,1fr);gap:10px}
+  .dr p{font-size:12.2px;line-height:1.55}
+  .sec-head{break-after:avoid}
+  .arch-primary,.arch-card,.cap-card,.ix-card,.zone{break-inside:avoid}
+  .end-note{break-before:page}
+}
+</style>
+</head>
+<body>
+<div class="grid-layer" aria-hidden="true"></div>
+<div class="glow" aria-hidden="true"></div>
+
+<header class="site-head">
+  <div class="shell head-inner">
+    <a class="brand" href="#start">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#183B56"/>
+        <circle cx="16" cy="16" r="9" fill="none" stroke="#3AA6B9" stroke-width="1.1"/>
+        <circle cx="16" cy="16" r="2.2" fill="#3AA6B9"/>
+        <path d="M16 4.5v3M16 24.5v3M4.5 16h3M24.5 16h3" stroke="#EAF3F8" stroke-width="1.3"/>
+      </svg>
+      <span class="brand-txt">
+        <span class="brand-en">LIFE PARAMETER SPACE</span>
+        <span class="brand-cn">人生参数空间</span>
+      </span>
+    </a>
+    <nav class="head-nav">
+      <button type="button" data-modal="about">测试说明</button>
+      <button type="button" data-modal="privacy">隐私</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ===== 视图：开始页 ===== -->
+  <section id="view-start" class="view">
+    <div class="shell">
+      <div class="start-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">36 items · 6 dimensions · 12 archetypes</p>
+          <h1 class="h1">找到你现在的位置，<br>而不是定义你是谁。</h1>
+          <p class="hero-sub">每个人都生活在一个由选择、行动方式与成长偏好构成的空间里。这份测试不会告诉你「你是哪一种固定的人」，也不会预测命运。它把你的当前倾向画成六个可移动的坐标。</p>
+          <div class="hero-cta">
+            <button type="button" class="btn btn-primary" id="btn-start">开始测试</button>
+            <span class="small" style="font-size:12.5px">无需登录 · 约 6–8 分钟</span>
+          </div>
+          <div class="hero-meta">
+            <span>按过去一年真实的自己回答</span>
+            <span>没有标准答案</span>
+            <span>非诊断工具</span>
+          </div>
+          <div id="draft-banner" class="draft-banner" hidden></div>
+        </div>
+        <div class="hero-axes">
+          <p class="axes-cap">six dimensions · 0–100</p>
+          <ul>
+            <li><b>E</b><span>探索度</span><i>Exploration</i><em>确定 · 探索</em></li>
+            <li><b>S</b><span>结构度</span><i>Structure</i><em>自由 · 结构</em></li>
+            <li><b>A</b><span>驱动力</span><i>Agency</i><em>响应 · 主动</em></li>
+            <li><b>D</b><span>深潜度</span><i>Depth</i><em>广度 · 深度</em></li>
+            <li><b>C</b><span>联结度</span><i>Connection</i><em>独立 · 联结</em></li>
+            <li><b>R</b><span>风险度</span><i>Risk</i><em>安全 · 冒险</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><b>36</b><span>正式题目 · 每维 6 题</span></div>
+        <div class="stat"><b>6–8</b><span>分钟完成 · 一题一屏</span></div>
+        <div class="stat"><b>6</b><span>维连续坐标 · 0–100</span></div>
+        <div class="stat"><b>12</b><span>结果原型 · 展示前三</span></div>
+      </div>
+
+      <div class="intro-grid">
+        <div class="note-card">
+          <h3><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>开始之前，请先知道</h3>
+          <ul class="note-list">
+            <li><span class="idx">01</span><span>没有正确答案。请按过去一年真实的你回答，而不是「我希望成为的人」。</span></li>
+            <li><span class="idx">02</span><span>高分不代表优秀，低分也不代表短板。每个维度都会同时说明优势、代价与适配环境。</span></li>
+            <li><span class="idx">03</span><span>结果只描述你当前回答所呈现的倾向，不是固定人格，也不用于招聘、绩效或临床诊断。</span></li>
+          </ul>
+        </div>
+        <div class="preview-card">
+          <div class="preview-head">
+            <h3 class="h3">报告里会有什么</h3>
+            <span class="micro mono">V1.1</span>
+          </div>
+          <ul class="preview-list">
+            <li>六维双端坐标</li>
+            <li>前三原型与相似度</li>
+            <li>Natural Zone 环境特征</li>
+            <li>参数交互与内在张力</li>
+            <li>Shadow Side 触发条件</li>
+            <li>Possible Futures 三条路径</li>
+            <li>决策 · 工作 · 学习 · 协作</li>
+            <li>思考问题与行动建议</li>
+          </ul>
+
+        </div>
+      </div>
+
+      <div class="disclaimer-bar">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
+        <p>本产品是原创的个人发展探索工具，不是经过临床或完整心理测量学验证的诊断量表。任何结果只描述你当前回答所呈现的倾向，不代表固定人格，也不应被用于招聘淘汰、升职定级、心理诊断或高风险决策。</p>
+      </div>
+    </div>
+  </section>
+  <!-- ===== 视图：选填背景 ===== -->
+  <section id="view-bg" class="view" hidden>
+    <div class="shell">
+      <div class="quiz-wrap" style="padding-top:48px">
+        <p class="eyebrow" style="margin-bottom:14px">optional background</p>
+        <h2 class="h2">先了解一点背景</h2>
+        <p class="lead" style="margin-top:12px;max-width:36em">以下三个问题均为选填，<strong style="font-weight:600;color:var(--brand-900)">不参与计分</strong>，只用于在你授权的情况下分组理解结果。你可以随时跳过。</p>
+
+        <div class="bg-form" style="margin-top:32px;display:flex;flex-direction:column;gap:26px">
+          <div class="field">
+            <div class="field-head"><label class="h3" style="font-size:15px">年龄段</label><span class="micro">选填 · 单选</span></div>
+            <div class="chip-select" data-field="age">
+              <button type="button" class="sel-chip" data-value="18-24">18–24</button>
+              <button type="button" class="sel-chip" data-value="25-30">25–30</button>
+              <button type="button" class="sel-chip" data-value="31-40">31–40</button>
+              <button type="button" class="sel-chip" data-value="40+">40 以上</button>
+              <button type="button" class="sel-chip" data-value="na">暂不填写</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-head"><label class="h3" style="font-size:15px">当前阶段</label><span class="micro">选填 · 单选</span></div>
+            <div class="chip-select" data-field="stage">
+              <button type="button" class="sel-chip" data-value="student">学生 / 准备进入职场</button>
+              <button type="button" class="sel-chip" data-value="early">初入职场 0–3 年</button>
+              <button type="button" class="sel-chip" data-value="pro">专业深耕期</button>
+              <button type="button" class="sel-chip" data-value="lead">管理或项目角色</button>
+              <button type="button" class="sel-chip" data-value="switch">职业转换期</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-head"><label class="h3" style="font-size:15px">这次测试的动机</label><span class="micro">选填 · 可多选</span></div>
+            <div class="chip-select" data-field="motivation">
+              <button type="button" class="sel-chip" data-value="know">认识自己的行动方式</button>
+              <button type="button" class="sel-chip" data-value="career">为职业选择做准备</button>
+              <button type="button" class="sel-chip" data-value="review">年度复盘</button>
+              <button type="button" class="sel-chip" data-value="curious">只是好奇</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-actions">
+          <button type="button" class="btn btn-primary" id="btn-bg-next">继续</button>
+          <button type="button" class="btn-link" id="btn-bg-skip">跳过，直接开始答题</button>
+        </div>
+        <p class="micro" style="margin-top:18px">我们不会收集姓名、手机号、精确生日、单位或职位。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 视图：答题 ===== -->
+  <section id="view-quiz" class="view" hidden>
+    <div class="shell">
+      <div class="quiz-wrap">
+        <div class="quiz-top">
+          <span class="quiz-count" aria-live="polite"><span id="q-pos">01</span> <em>/ 36</em></span>
+          <span class="quiz-page" id="q-page">第 1 页 · 共 6 页</span>
+        </div>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="36" aria-valuenow="0" id="q-progress"><i id="q-bar"></i></div>
+        <div class="q-card">
+          <div class="q-head">
+            <span class="q-idx" id="q-idx">Q01</span>
+            <span class="q-tag" id="q-tag">请选择最接近你的选项</span>
+          </div>
+          <p class="q-text" id="q-text">题目加载中</p>
+          <div class="opts" id="q-opts" role="radiogroup" aria-labelledby="q-text"></div>
+          <div class="q-err" id="q-err">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg>
+            请选择一个最接近你的选项
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-bar">
+      <div class="quiz-bar-inner">
+        <span class="quiz-key">按 1–5 选择，选中后自动进入下一题 · ← 返回上一题</span>
+        <div class="quiz-nav">
+          <button type="button" class="btn btn-ghost" id="btn-prev">上一步</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 视图：计算中 ===== -->
+  <section id="view-calc" class="view" hidden>
+    <div class="shell">
+      <div class="calc-wrap">
+        <div class="calc-ring" aria-hidden="true"></div>
+        <h2 class="h2" style="margin-top:26px">正在计算你的坐标</h2>
+        <p class="small" style="margin-top:8px">结果只依赖你自己的回答，通常在 2 秒内完成。</p>
+        <div class="calc-steps" id="calc-steps">
+          <div class="calc-step" data-step="0"><span class="st"></span><span class="lbl">计算六维坐标</span></div>
+          <div class="calc-step" data-step="1"><span class="st"></span><span class="lbl">匹配原型距离</span></div>
+          <div class="calc-step" data-step="2"><span class="st"></span><span class="lbl">生成完整报告</span></div>
+        </div>
+        <p class="micro" style="margin-top:26px;display:none" id="calc-fallback">计算时间比预期长。答案已保存在本地，可以安全返回或重试。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 视图：完整报告 ===== -->
+  <section id="view-report" class="view" hidden>
+    <div class="shell report-wrap">
+      <div class="report-grid">
+        <aside class="report-toc" aria-label="报告目录">
+          <p class="toc-title">Contents</p>
+          <ol class="toc-nav" id="report-toc"></ol>
+        </aside>
+        <div class="report-main" id="report-main"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="shell foot-inner">
+    <p class="small">非诊断工具 · LPS-Q-1.1 / LPS-A-1.1 / LPS-C-1.1 · 原始回答默认保留 180 天</p>
+    <div class="foot-links">
+      <button type="button" data-modal="about">测试说明</button>
+      <button type="button" data-modal="privacy">隐私与数据</button>
+      <button type="button" data-modal="qa">评分算法自检</button>
+      <button type="button" data-modal="versions">版本信息</button>
+    </div>
+  </div>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-panel">
+    <button type="button" class="modal-close" id="modal-close" aria-label="关闭">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   人生参数空间 V1.1 — 确定性评分与内容配置
+   版本：LPS-Q-1.1 / LPS-A-1.1 / LPS-C-1.1 / LPS-P-1.1
+   ============================================================ */
+const VERSIONS = { q:'LPS-Q-1.1', a:'LPS-A-1.1', c:'LPS-C-1.1', p:'LPS-P-1.1' };
+const LIKERT = ['非常不像我','比较不像我','不确定 / 视情况而定','比较像我','非常像我'];
+
+const DIMS = [
+  { k:'E', name:'探索度', en:'Exploration', left:'确定性', right:'探索性',
+    core:'当已知路线与未知可能性同时存在时，你倾向哪边？',
+    loState:'你更愿意沿一条已经被验证的路线推进，把不确定性留到更可控的时候。',
+    midState:'你在确定性与探索性之间切换：有些事愿意先试，有些事更愿意沿用成熟做法。',
+    hiState:'你更愿意先进入未知、在过程中获取信息，而不是等路线被完全验证。',
+    leftValue:'降低试错成本、复用成熟经验、让交付更可预期',
+    rightValue:'更早发现新机会、对变化保持开放、在信息不足时也敢开始',
+    leftFit:'窗口成本高、需要稳定交付的环境', rightFit:'问题尚未定义、需要先打开可能性的环境',
+    leftOver:'可能错过正在打开的窗口', rightOver:'可能不断追新，缺少沉淀',
+    leftFix:'每月留一次低成本的「小实验」，用可控代价换信息', rightFix:'为每次探索预设收敛条件与停止标准',
+    observe:'面对陌生任务时，你先找成熟方案，还是先做一个小实验',
+    bands:['确定锚定者','稳健探索者','情境探索者','未知探索者','边界探索者'] },
+  { k:'S', name:'结构度', en:'Structure', left:'自由', right:'结构',
+    core:'你通过灵活适应，还是规划秩序来掌控复杂性？',
+    loState:'你更习惯即兴应对，让计划跟着现场走，保留调整空间。',
+    midState:'你会做必要的安排，但不把每一步都写死，能根据情况临时调整。',
+    hiState:'你倾向先排出结构、顺序和节点，再进入执行，用秩序降低混乱。',
+    leftValue:'快速适应、保留选择空间、在信息不全时也能动起来',
+    rightValue:'可拆解、可复现、可交接，让复杂任务稳定落地',
+    leftFit:'变化快、信息每天都在更新的环境', rightFit:'周期长、多人协作、质量要求高的环境',
+    leftOver:'可能失去节奏，难以形成可复制的成果', rightOver:'可能过度规划，把框架当成成果',
+    leftFix:'给关键任务补一张最小节点表，只写三个检查点', rightFix:'先用人工 MVP 验证，再决定是否自动化',
+    observe:'面对三个月才能完成的任务，你是否会主动拆成阶段节点',
+    bands:['自由流动者','弹性行动者','切换规划者','系统规划者','秩序建构者'] },
+  { k:'A', name:'驱动力', en:'Agency', left:'响应', right:'主动',
+    core:'现实不符合期待时，你倾向适应，还是改变局面？',
+    loState:'你更尊重时机与既有安排，倾向等条件成熟再行动。',
+    midState:'你会先观察条件和时机，值得时才主动推动，视情况切换。',
+    hiState:'条件不成熟时你也倾向自己动手，把局面往想要的方向推。',
+    leftValue:'尊重环境、避免无效推进、把力气留给真正的窗口',
+    rightValue:'主动创造机会、改变局面、不把结果交给安排',
+    leftFit:'规则复杂、时机比速度更重要的环境', rightFit:'目标清晰但路径不存在的环境',
+    leftOver:'可能长期等待，把选择权交给外部', rightOver:'可能推动过快，忽略共识与节奏',
+    leftFix:'把「等待」写成明确的触发条件，而不是默认状态', rightFix:'启动前做一次小范围对齐，降低返工',
+    observe:'机会没有出现时，你是等待安排，还是主动提案',
+    bands:['环境响应者','时机观察者','选择行动者','机会推动者','路径创造者'] },
+  { k:'D', name:'深潜度', en:'Depth', left:'广度', right:'深度',
+    core:'你通过跨域连接，还是长期钻研来建立能力？',
+    loState:'你从多个领域之间建立连接，用综合视角理解问题。',
+    midState:'你会围绕几个相关主题展开，既有一定宽度，也能往下走。',
+    hiState:'你更愿意在一个问题上待久一点，直到理解机制、边界和例外。',
+    leftValue:'跨界连接、快速形成综合视角、迁移别处的方法',
+    rightValue:'长期复利、解决高复杂度问题、形成难以替代的深度',
+    leftFit:'需要整合多源信息、快速形成方案的环境', rightFit:'复杂度高、需要长期积累的环境',
+    leftOver:'可能缺少一项别人非你不可的深度', rightOver:'可能投入过深，专业价值长期不可见',
+    leftFix:'选一个专业锚点，给它稳定的投入节奏', rightFix:'每 8 小时研究，至少留 2 小时输出或分享',
+    observe:'学习 100 小时后，你形成的是一张地图，还是一个专业成果',
+    bands:['广域连接者','跨界整合者','T型成长者','专业深潜者','极致钻研者'] },
+  { k:'C', name:'联结度', en:'Connection', left:'独立', right:'联结',
+    core:'动力、判断和机会多大程度来自人与人？',
+    loState:'你更依赖自己的判断与节奏，独立完成，必要时才对外沟通。',
+    midState:'你既能独立推进，也会在关键节点借助他人的信息与反馈。',
+    hiState:'你通过交流、协作和连接放大机会，很多事情在和人的互动中成形。',
+    leftValue:'独立判断、专注、不被群体情绪带走',
+    rightValue:'协作、快速反馈、资源连接与社会杠杆',
+    leftFit:'需要专注、保密与独立判断的环境', rightFit:'需要资源连接、快速反馈的环境',
+    leftOver:'价值可能不被看见，机会来得更慢', rightOver:'可能依赖外部互动，深度工作被持续打断',
+    leftFix:'固定一个对外输出渠道，让判断被看见', rightFix:'每周保留两段无会议的深度时段',
+    observe:'遇到难题时，你先独立推演，还是先主动找人',
+    bands:['高度自主者','独立思考者','选择联结者','协作连接者','网络驱动者'] },
+  { k:'R', name:'风险度', en:'Risk', left:'安全', right:'冒险',
+    core:'你愿意拿多少确定性，去交换可能性？',
+    loState:'你优先保护安全边际，先确认下行可控，再考虑上行。',
+    midState:'你会权衡下行与上行，风险可算清时愿意承担一段不确定。',
+    hiState:'在失败可承受的前提下，你愿意用确定性换更大的可能性。',
+    leftValue:'安全边际、稳定性、让长期选择不被一次失误打断',
+    rightValue:'接受波动、争取上行、用快速试错换信息',
+    leftFit:'错误成本高、需要可持续性的环境', rightFit:'上行空间大、失败可承受的环境',
+    leftOver:'可能过度保守，错过成长窗口', rightOver:'可能低估尾部风险',
+    leftFix:'设计可承受失败的小实验，逐步扩大边界', rightFix:'为每次下注设退出阈值与最坏情况',
+    observe:'面对一次可承受的失败，你是否愿意真的尝试',
+    bands:['安全守护者','稳健决策者','风险权衡者','机会下注者','高波动探索者'] }
+];
+
+const QUESTIONS = [
+ { n:1, dim:'E', rev:false, text:'如果出现一个我从未接触过、但可能很有价值的项目，我通常愿意花时间先探索一下，即使暂时不知道最后有没有结果。' },
+ { n:2, dim:'S', rev:false, text:'面对忙碌的一天，我通常喜欢先排出任务、顺序和优先级，再开始工作。' },
+ { n:3, dim:'C', rev:false, text:'有一个不错的想法时，与别人讨论通常能让我更快把它想清楚。' },
+ { n:4, dim:'A', rev:false, type:'s', text:'有一个我非常想参与的项目，但负责人没有邀请我。我更可能：',
+   opts:['默认这不是我的机会','等之后有没有机会','找合适时机表达兴趣','主动找负责人了解参与可能','不仅主动联系，还会说明自己能提供什么价值'] },
+ { n:5, dim:'D', rev:false, type:'s', text:'如果突然获得 100 小时完全自由的学习时间，我更希望：',
+   opts:['接触很多不同主题','探索几个不同领域','围绕 2–3 个相关主题学习','主要研究一个领域','集中研究一个具体问题，尽可能深入'] },
+ { n:6, dim:'R', rev:false, type:'s', text:'有两个职业机会：A 收入稳定、业务成熟、发展可预测；B 当前收入相近，属于新业务，未来可能明显更好，也可能失败。我更可能：',
+   opts:['明确选择 A','大概率选择 A','需要更多信息','大概率选择 B','明确选择 B'] },
+ { n:7, dim:'S', rev:false, type:'s', text:'准备一次 7 天旅行，我觉得最舒服的是：',
+   opts:['到了当地再决定','只确定交通和住宿','安排几个关键项目','大部分行程提前计划','每天主要行程基本提前确定'] },
+ { n:8, dim:'E', rev:true, text:'如果已经存在一条经过验证的可靠路线，我通常不太愿意仅仅为了尝试新东西而偏离它。' },
+ { n:9, dim:'A', rev:false, text:'当我发现一个长期存在但没人负责解决的问题，我经常会产生「是不是可以由我来推动一下」的想法。' },
+ { n:10, dim:'C', rev:true, text:'如果条件允许，我通常更愿意把复杂任务独立完成，只有必要时才与别人讨论。' },
+ { n:11, dim:'R', rev:true, text:'做重要决定时，我通常会首先考虑「最坏情况发生后我能不能承受」，而不是最佳结果可能有多好。' },
+ { n:12, dim:'D', rev:false, text:'一个问题真正吸引我以后，我往往不满足于「知道怎么用」，而会继续寻找它背后的原理。' },
+ { n:13, dim:'D', rev:true, text:'相比在一个方向成为专家，我更享受不断接触新的领域，并在不同知识之间建立联系。' },
+ { n:14, dim:'R', rev:false, text:'一个机会对我非常有吸引力，但认真分析后成功率可能只有 40%。只要失败后果仍在承受范围内，我依然可能尝试。' },
+ { n:15, dim:'S', rev:true, text:'即使原来的计划被突然打乱，我通常也不会特别介意，很快就能进入新的节奏。' },
+ { n:16, dim:'E', rev:false, type:'s', text:'到了一个完全陌生的城市，有半天空闲时间，我更倾向：',
+   opts:['完全按照提前准备的路线','主要按照攻略，偶尔临时调整','确定几个目标，其他随时决定','只确定大方向，然后随意探索','几乎不做攻略，到那里再决定'] },
+ { n:17, dim:'C', rev:false, text:'进入一个多数人都不认识的专业活动后，我通常愿意主动认识其中有意思的人。' },
+ { n:18, dim:'A', rev:true, text:'很多事情是否能够发生主要取决于时机，所以条件没有成熟之前，等待通常比主动行动更合适。' },
+ { n:19, dim:'A', rev:false, text:'当我缺少完成目标所需要的资源时，我首先想到的往往是还能从哪里找到资源、信息或帮助。' },
+ { n:20, dim:'C', rev:true, text:'面对重要决定，我更相信自己长时间独立思考后的判断，而不是通过大量讨论形成判断。' },
+ { n:21, dim:'E', rev:false, text:'当我偶然遇到一个与当前工作、学习没有直接关系但很有意思的知识领域，我容易产生继续了解它的欲望。' },
+ { n:22, dim:'D', rev:false, text:'即使一个有价值的问题长时间没有明显进展，只要我仍然认为值得，我可以继续钻研。' },
+ { n:23, dim:'S', rev:false, text:'面对一个三个月才能完成的大任务，我自然会把它拆成阶段目标和时间节点。' },
+ { n:24, dim:'R', rev:true, text:'即使一个新选择看起来潜在收益更大，只要现在的路径已经足够不错，我通常没有必要承担额外的不确定性。' },
+ { n:25, dim:'R', rev:false, text:'如果失败的代价有限，而成功的潜在收益很大，我愿意频繁进行小规模尝试。' },
+ { n:26, dim:'D', rev:true, text:'当一个主题的新鲜感消失之后，即使它还有很多东西值得学习，我也容易把注意力转向别的方向。' },
+ { n:27, dim:'A', rev:false, text:'对未来不满意时，我更倾向于改变自己的行动策略，而不是等待环境自然发生变化。' },
+ { n:28, dim:'S', rev:false, text:'我喜欢使用日历、清单、笔记或其他系统来管理事情，而不是主要依赖记忆和临场判断。' },
+ { n:29, dim:'E', rev:true, text:'在行动之前，如果还存在很多没有弄清楚的问题，我通常会觉得最好先不要开始。' },
+ { n:30, dim:'C', rev:false, text:'回顾自己的成长，一些重要机会往往来自和别人的交流、合作、推荐或者连接。' },
+ { n:31, dim:'C', rev:false, text:'遇到自己解决不了的问题时，我很自然地会想到「谁可能知道答案」，并主动联系对方。' },
+ { n:32, dim:'S', rev:true, text:'如果突然得到完整的空闲周末，我不做任何安排、完全看心情行动，也会觉得很舒服。' },
+ { n:33, dim:'R', rev:false, text:'为了获得明显更大的成长空间，我愿意放弃一部分短期的稳定性和可预测性。' },
+ { n:34, dim:'D', rev:false, text:'相比于「很多事情我都会一些」，我更希望拥有至少一项别人遇到复杂问题会想到我的专业能力。' },
+ { n:35, dim:'A', rev:false, text:'如果没有人给我想要的机会，我通常会尝试自己创造一个类似的机会。' },
+ { n:36, dim:'E', rev:false, text:'如果两个选择预期收益接近，我通常更容易被那个「能让我看到新东西」的选项吸引。' }
+];
+
+const ARCHETYPES = [
+ { id:'trailblazer', name:'路径创造者', en:'Trailblazer', tag:'E↑ A↑ R↑', c:[85,45,85,50,55,80],
+   position:'把还没人走过的路当成机会本身，用行动而不是等待来定义下一步。',
+   summary:'你倾向主动进入未知，用速度和上行空间换取可能性。',
+   portrait:'你不一定喜欢冒险本身，真正难以忍受的是明明存在其他可能，却只能沿既定道路前进。重要机会往往来自主动接触、尝试或亲自创造。当一件事还有上行空间，你更愿意先进入，再在过程中修正方向。',
+   drivers:['上行空间','自主权','启动速度'],
+   naturalText:'新业务、创业、0 到 1 项目、新技术应用、高自主权项目。',
+   naturalTraits:['问题尚未完全定义','拥有定义权与自主权','结果可通过实验验证','变化快于流程','上行空间大于确定性','反馈周期短'],
+   misfit:'长期审批、极低自主、以维护为主的重复型岗位；不是做不了，而是消耗远大于产出。',
+   shadow:'不断寻找下一件更有意思的事，低估执行成本，让正确的选择缺少复利。',
+   shadowTrigger:'当同时打开多个赌注、且没有外部收敛要求时，优势开始变成分散。',
+   decision:'先看可能性和上行空间，在约 70% 信息时愿意启动；信息不足时用行动换信息。',
+   work:'偏好能自己定义问题、节奏偏快、可随时调整范围的项目；不喜欢被流程提前锁死。',
+   learn:'通过真实尝试快速学习，一个试点胜过三轮讨论；需要能快速给反馈的环境。',
+   collab:'协作对象最好能补执行、运营和风险控制；你负责打开局面，对方负责收口。',
+   pressure:'压力下可能增加新赌注、频繁换方向，用新的可能性缓解焦虑。',
+   action:'只保留 1 个当前赌注；每 2–3 天复盘一次证据；连续 4 周交付同一方向的可见成果。',
+   stretch:'S 或 D', question:'你现在真正需要一个新机会，还是把已经找到的机会做深？' },
+ { id:'architect', name:'系统建造者', en:'Architect', tag:'S↑ D↑ A↑', c:[60,85,80,75,50,50],
+   position:'看到问题时，你想的不是解决一次，而是让它以后不必再被解决。',
+   summary:'你倾向用结构把混乱变成可复用的系统，再推动它真正落地。',
+   portrait:'你看到问题时，不满足于只解决一次，更想建立以后持续解决同类问题的机制。混乱、重复和依赖个人经验的流程会激发你的改造欲。你愿意在结构上多花一点时间，换取长期的可复用与可交接。',
+   drivers:['可复用','可控性','长期效率'],
+   naturalText:'工程设计、系统架构、流程优化、自动化、知识管理、产品体系。',
+   naturalTraits:['同类问题重复出现','多人依赖个人经验','有明确质量标准','可被标准化','需要长期可维护','改动成本随时间上升'],
+   misfit:'临时性强、每天在变、且没有改进空间的环境；系统还没建完就已被推翻。',
+   shadow:'过度设计，为未来系统投入过多，真实用户却迟迟没有使用。',
+   shadowTrigger:'当系统本身开始比使用它的人更有吸引力时。',
+   decision:'先定义结构、依赖关系和标准，再推动落地；偏好复杂、重复出现且可系统化的问题。',
+   work:'偏好有边界、可拆解、能沉淀成模板或机制的任务；对返工和临时插单敏感。',
+   learn:'通过框架、模型和模板学习；先建立结构，再往里填案例。',
+   collab:'与一线用户和快速执行者合作最有效；容易被同样喜欢设计的伙伴拖慢交付。',
+   pressure:'压力下容易加强控制、继续设计，用更多结构对抗不确定。',
+   action:'5 天内交付一个人工 MVP；被真实使用 1 次后再决定是否自动化。',
+   stretch:'E 或 R', question:'你是在解决问题，还是在享受设计解决问题的方法？' },
+ { id:'deepdiver', name:'深海研究者', en:'Deep Diver', tag:'D↑ S↑ C↓', c:[50,75,50,90,30,35],
+   position:'你的优势来自在一个复杂问题上待得足够久，久到别人开始来找你。',
+   summary:'你倾向在一个复杂问题上长期深入，用理解深度建立壁垒。',
+   portrait:'你的优势来自在复杂问题上待得足够久。你会继续追问机制、边界和例外，并有机会形成难以复制的专业壁垒。你不太依赖外部热闹，更相信把一件事想透之后自然产生的判断力。',
+   drivers:['理解深度','专业复利','独立判断'],
+   naturalText:'工程技术、研发、科研、算法、专业咨询、高级专家路线。',
+   naturalTraits:['问题复杂度高','需要长期积累','答案不在表面','错误成本较高','允许安静工作','评价来自专业同行'],
+   misfit:'持续浅层切换、社交密集、以响应速度为主要评价标准的环境。',
+   shadow:'输入很多、输出很少，等待完全理解才表达，专业价值不可见。',
+   shadowTrigger:'当只有你知道答案、却没有对外输出渠道时。',
+   decision:'重视证据、机制和边界，通常在理解充分后行动；对「先做再说」保持警惕。',
+   work:'偏好长时间不被打断的深度工作，任务范围清晰、质量标准明确。',
+   learn:'通过长时间阅读、实验和独立推演学习；需要把理解写成可交付的成果。',
+   collab:'信任建立在专业判断上，而不是社交频率；分歧时更愿意用证据说话。',
+   pressure:'压力下可能继续研究、推迟表达，用更多输入缓解不确定。',
+   action:'每 2–3 天输出一页专业笔记；每 10 天做一次 30 分钟分享；研究与输出时间按 8:2 配置。',
+   stretch:'C 或 A', question:'如果只有你知道这个答案，它产生的价值是不是被限制了？' },
+ { id:'synthesizer', name:'跨界连接者', en:'Synthesizer', tag:'E↑ D↓ C中高', c:[80,45,60,25,70,60],
+   position:'你擅长把两个原本无关的东西接在一起，然后让一个新解法出现。',
+   summary:'你倾向把不同领域的碎片接起来，用迁移产生新解法。',
+   portrait:'你擅长发现原本没有连接的事物之间的关系，并把一个领域的方法迁移到另一个领域。你学得快、看得广，容易在跨团队、跨专业的场景里找到别人没有的角度。',
+   drivers:['模式识别','迁移能力','快速吸收'],
+   naturalText:'产品、战略、咨询、解决方案、跨部门项目、AI 应用。',
+   naturalTraits:['需要跨领域视角','问题定义模糊','信息分散在多个团队','需要快速形成方案','变化快','允许试验'],
+   misfit:'封闭单一、只允许一种正确方法、长期只做一个窄模块的环境。',
+   shadow:'懂得很多但职业壁垒较薄，没有一项能力让别人非找你不可。',
+   shadowTrigger:'当所有输入都在拓宽、却没有一个专业锚点在加深时。',
+   decision:'快速吸收多个视角，通过类比找到新解法；信息够用就开始组合，边做边校正。',
+   work:'适合项目式和主题式任务，能同时接触多个相关方；对重复的单一工序耐心有限。',
+   learn:'项目式、主题式学习效果好；需要与专业深潜者搭档形成可信深度。',
+   collab:'你是天然的翻译者，能把不同团队的语言对接起来；需要有人帮你把方案落到细节。',
+   pressure:'压力下可能继续扩展范围，用更多信息缓解焦虑。',
+   action:'选择一个专业锚点；为它设定稳定投入节奏，并形成一份可证明深度的成果。',
+   stretch:'D', question:'如果别人只能因为一种能力记住你，你希望是什么？' },
+ { id:'network', name:'机会编织者', en:'Network Builder', tag:'C↑ A↑ E↑', c:[80,45,85,35,90,65],
+   position:'你的资源不只是能力，还有你认识谁、以及你愿意把谁和谁接上。',
+   summary:'你倾向通过人与人的连接发现机会，再把资源组合起来。',
+   portrait:'你的世界由人、信息和机会连接而成。你更容易通过交流发现机会，再通过连接把资源组合起来。你对人的状态和场上的空缺都很敏感，常常是最早知道哪里有机会的人。',
+   drivers:['连接能力','信息差','主动触达'],
+   naturalText:'BD、销售、客户管理、招聘、投资、创业、生态合作。',
+   naturalTraits:['机会来自外部连接','需要持续跟进','信息更新快','多方利益需要协调','反馈即时','关系是长期资产'],
+   misfit:'长期独处、缺少反馈、只靠个人产出评价的环境。',
+   shadow:'联系人和项目很多，但深度、交付或跟进不足。',
+   shadowTrigger:'当新增联系的速度快过兑现承诺的速度时。',
+   decision:'通过人和信息判断机会，善于促成资源交换；往往先建立关系，再定义具体合作。',
+   work:'适合需要外部连接和持续跟进的工作；对纯案头、长周期、无反馈的任务耐受度低。',
+   learn:'从对话、案例和反馈中学习；听别人讲一次真实经历胜过读一份报告。',
+   collab:'你擅长把人和事对上，但需要流程型伙伴帮你沉淀和交付。',
+   pressure:'压力下可能扩大联系人和项目数量，用更多连接缓解不安。',
+   action:'建立 10 人核心关系表；每 2–3 天完成 2 次高质量跟进；每 10 天沉淀一个可复用资源。',
+   stretch:'D 或 S', question:'如果失去现在的人脉，什么能力仍会让别人主动认识你？' },
+ { id:'operator', name:'稳健执行者', en:'Operator', tag:'S↑ R↓ A中高', c:[35,85,70,65,55,25],
+   position:'当目标被说清楚，你是那个能让它按质量和时间真正落地的人。',
+   summary:'你倾向把明确目标稳定推到终点，可靠性是你的竞争力。',
+   portrait:'当目标明确时，你能够把事情稳定、按质量推到终点。可靠性是你的关键竞争力：你不需要每次都惊艳，但很少让人失望。你对风险、节点和交付标准有天然的敏感。',
+   drivers:['可靠性','风险意识','推进力'],
+   naturalText:'项目执行、工程交付、制造、供应链、财务、运营。',
+   naturalTraits:['目标与标准清晰','交付质量重要','周期长','多方依赖','变动有成本','需要稳定节奏'],
+   misfit:'目标频繁变化、规则模糊、没有明确验收标准的环境。',
+   shadow:'非常擅长完成别人定义的问题，却较少重新判断问题是否值得。',
+   shadowTrigger:'当「按时完成」取代「做对的事」成为唯一标准时。',
+   decision:'先明确目标、责任和标准，再持续推进；不确定时优先降低下行。',
+   work:'偏好有明确交付物、可排期、责任边界清楚的任务；对反复改需求反应明显。',
+   learn:'通过流程、实践和复盘学习；更喜欢可验证的清单，而不是开放讨论。',
+   collab:'你是让人放心的合作者，愿意承担收口工作；与探索者合作可提高问题选择质量。',
+   pressure:'压力下会进一步收紧计划并接管任务，把可控范围抓得更紧。',
+   action:'每 10 天做一次 Stop Doing Review；删除或重构一项低影响任务；主动提出一个改进议题。',
+   stretch:'E 或 A', question:'你是在高效前进，还是只是在高效地沿既定路线前进？' },
+ { id:'explorer', name:'自由探索者', en:'Explorer', tag:'E↑ S↓ D↓', c:[90,25,55,25,50,60],
+   position:'你的成长路径更像不断打开新房间，而不是在同一个房间里待得更久。',
+   summary:'你倾向快速进入新场景，用体验和开放保持选择空间。',
+   portrait:'你的成长路径更像探索、体验、学习、重新组合。新环境和新问题容易让你进入状态，你常常同时拥有好几个兴趣点，并在它们之间找到别人想不到的联系。',
+   drivers:['新鲜感','开放性','快速学习'],
+   naturalText:'创意工作、内容、用户研究、职业早期探索、创新环境。',
+   naturalTraits:['路径不固定','允许试错','信息开放','节奏变化','需要新鲜输入','低结构化'],
+   misfit:'高度重复、严格固定路径、以年为单位考核的环境。',
+   shadow:'不断开始，让长期复利反复归零。',
+   shadowTrigger:'当新的兴趣开始承担逃避困难的功能时。',
+   decision:'依靠兴趣与现场信息快速行动，保留较多选择；很少在开始前把路想完。',
+   work:'偏好自由度高、可切换任务、能看到新东西的工作；对枯燥的重复工序消耗很快。',
+   learn:'体验式、跨主题学习强；需要固定锚点或外部节奏帮助形成复利。',
+   collab:'你带来活力和新视角，需要有人帮你把想法收成可交付的东西。',
+   pressure:'压力下可能通过开启新方向逃避困难，而不是解决当前问题。',
+   action:'采用 80/20 资源分配；新方向必须进入 10 天探索盒；到期明确 Stop / Hobby / Commit。',
+   stretch:'S 或 D', question:'你是在探索世界，还是用探索逃避长期投入？' },
+ { id:'strategist', name:'战略下注者', en:'Strategist', tag:'R↑ S↑ A↑', c:[65,80,85,65,55,80],
+   position:'你不是单纯冒险，而是先把赔率算清楚，再在最值得的那一注上压重。',
+   summary:'你倾向先算清赔率与下行，再把资源压在值得的一注上。',
+   portrait:'你不是单纯冒险，而是先计算风险、收益、概率与下行，再在值得时集中下注。你能同时看到长期布局和短期代价，也愿意为更大的上行承担一段不确定。',
+   drivers:['赔率判断','资源配置','决策质量'],
+   naturalText:'商业战略、投资、管理、创业、大项目决策、谈判。',
+   naturalTraits:['资源有限','选项之间存在赔率','下行可计算','需要长期视角','多方博弈','决策不可逆'],
+   misfit:'信息完全不可得、且无法设置退出条件的环境。',
+   shadow:'过度相信模型已覆盖风险，忽略未知的未知。',
+   shadowTrigger:'当模型越来越精致、而反方声音越来越少时。',
+   decision:'比较赔率、下行和机会成本后集中下注；愿意在信息不完整时决策，但要求有退出条件。',
+   work:'适合重大资源配置和多变量决策；对低价值、无决策权的执行工作缺乏耐心。',
+   learn:'通过案例、模型和复盘学习；需要一个反方角色持续挑战核心假设。',
+   collab:'你善于把不同利益方的诉求折算成条件；需要有人提醒你模型的边界。',
+   pressure:'压力下可能过度相信模型，用更复杂的分析维持掌控感。',
+   action:'每个重大决策完成 Pre-mortem；定义 3 个领先指标和 1 个退出阈值；每 5 天检查一次假设。',
+   stretch:'E（反向为开放未知）', question:'如果核心假设完全错误，你多久能够发现？' },
+ { id:'creator', name:'独立创造者', en:'Independent Creator', tag:'C↓ E↑ A↑', c:[80,45,80,65,25,65],
+   position:'你需要一段不被打扰的空间，才能做出真正属于自己、而不是共识产物的东西。',
+   summary:'你倾向在独立空间里打磨原创作品，用结果而不是共识说话。',
+   portrait:'你需要一定心理空间形成真正属于自己的东西，内部驱动力和独立判断较强。你不容易被群体情绪带走，更愿意按自己的标准反复打磨，直到作品能代表你。',
+   drivers:['原创性','独立判断','内在标准'],
+   naturalText:'独立开发、写作、设计、技术创新、个人项目、小团队创业。',
+   naturalTraits:['需要完整拥有作品','允许独立判断','评价来自作品','少会议','长期打磨','标准由自己设定'],
+   misfit:'高会议、强共识、微观管理、需要频繁对外解释的环境。',
+   shadow:'作品长期停在自己的世界，等待「完全准备好」才发布。',
+   shadowTrigger:'当打磨开始替代真实反馈时。',
+   decision:'依靠内部标准和独立判断形成原创方案；对外部意见保持筛选，不轻易改变核心。',
+   work:'适合完整拥有一段工作、边界清楚、少打扰的任务；对频繁同步和共同决策耐受度低。',
+   learn:'独立构建和反复打磨效果好；需要尽早引入真实用户，而不是大量内部讨论。',
+   collab:'你更愿意用作品建立信任；分歧时倾向于用结果说话，而不是反复说服。',
+   pressure:'压力下会延迟发布、减少反馈，把更多时间放在打磨上。',
+   action:'执行 70% 发布规则；第 9 天、第 18 天、第 28 天各完成一次 3 人用户测试并记录变化。',
+   stretch:'C', question:'你是在保护作品的独立性，还是保护自己免受评价？' },
+ { id:'catalyst', name:'协同推动者', en:'Catalyst', tag:'C↑ A↑ S中高', c:[60,70,85,50,90,50],
+   position:'你的能力不是一个人做完，而是让对的人、对的资源在同一件事上一起动起来。',
+   summary:'你倾向组织人和资源，让复杂的事在多方之间真正动起来。',
+   portrait:'你的优势不是一个人解决全部问题，而是找到正确的人、组织资源并让复杂系统一起行动。你对场上的阻力、利益和依赖关系很敏感，常常是让事情真正开始的那个人。',
+   drivers:['动员力','关系敏感','推进共识'],
+   naturalText:'项目负责人、跨部门协调、团队管理、客户项目。',
+   naturalTraits:['多方参与','职责交叉','需要共识','阻力来自组织','节奏由多方决定','授权影响成败'],
+   misfit:'没有授权、职责边界不清、只能靠个人硬扛的环境。',
+   shadow:'成为组织中最忙的人，会议和消息侵占深度工作。',
+   shadowTrigger:'当所有协调都只能由你亲自完成时。',
+   decision:'先识别利益相关者、依赖关系和阻力，再组织行动；用共识换推进速度。',
+   work:'适合跨部门复杂项目；需要授权和清晰边界，否则容易过载。',
+   learn:'通过共同工作、复盘和反馈学习；从别人的实际困难里理解系统。',
+   collab:'你天然承担连接和翻译的角色；需要保护固定深度工作时间，避免只剩协调。',
+   pressure:'压力下会亲自协调所有细节，把系统压力揽到自己身上。',
+   action:'每 10 天删除、委派或自动化约 3% 的协调事项；每 2–3 天设置 2 个 90 分钟无会议时段。',
+   stretch:'D 或 S', question:'如果你休假一个月，这套系统还能正常运行吗？' },
+ { id:'guardian', name:'守序专家', en:'Guardian', tag:'E↓ S↑ R↓ D↑', c:[25,85,50,90,40,20],
+   position:'你的可信度来自对标准、证据和安全边际的长期坚持。',
+   summary:'你倾向用标准与证据控制风险，在错误成本高的地方守住底线。',
+   portrait:'你重视证据、标准、验证和安全边际。在错误成本高的行业中，这种可靠性极其重要。你愿意花时间确认一件事是否真的成立，而不是先让它跑起来。',
+   drivers:['严谨','安全边际','长期可靠'],
+   naturalText:'工程设计、电力、质量、测试、安全、合规、技术审核。',
+   naturalTraits:['错误成本高','需要可追溯','标准与合规重要','验证周期长','多人复核','稳定性优先'],
+   misfit:'把「创新」当作唯一价值、要求快速试错而不设边界的环境。',
+   shadow:'对新方法要求过高证据门槛，可能错过学习窗口。',
+   shadowTrigger:'当「还没验证完」成为拒绝一切新方法的理由时。',
+   decision:'先核对标准、证据和安全边际，再接受变化；偏好可复核的判断。',
+   work:'适合高风险、高可靠、强合规领域；需要明确规范、复核机制和稳定节奏。',
+   learn:'通过标准、案例和严谨验证学习；对未经验证的新概念保持距离。',
+   collab:'你适合负责验证和边界，与创新者搭档时能把大胆的想法变得可交付。',
+   pressure:'压力下可能进一步提高证据门槛，用更多确认缓解不安。',
+   action:'每季度完成一个低风险高学习 Pilot；预先限定范围、失败成本和验证标准。',
+   stretch:'E 或 R', question:'你保护的是经过验证的原则，还是已经习惯的做法？' },
+ { id:'navigator', name:'适应航行者', en:'Navigator', tag:'多数维度 40–60', c:[50,50,50,50,50,50],
+   position:'你很少被单一偏好限制，而是根据情境调整策略，代价是方向感需要自己给出。',
+   summary:'你倾向根据情境调整方式，适应力强但需要自己给出方向。',
+   portrait:'你的多数参数处于中部，意味着较强的情境适应能力，而不是没有特点。你能在不同环境里切换方式，也容易理解不同立场；这让你适应力强，但也可能长期缺少自己选择的方向。',
+   drivers:['情境适应','多方理解','切换能力'],
+   naturalText:'变化组织、综合岗位、项目制、咨询、职业早期。',
+   naturalTraits:['环境差异大','角色需要切换','要求综合判断','方向不完全由自己定','关系复杂','变化频繁'],
+   misfit:'缺少反馈、同时要求明确个人品牌的环境。',
+   shadow:'被动适应环境，长期缺少自己选择的方向。',
+   shadowTrigger:'当所有选择都由环境给出、而你从不主动设定方向时。',
+   decision:'根据情境切换策略，先看当下条件再决定方式；很少用单一原则处理所有情况。',
+   work:'适合综合岗位、项目制与变化环境；需要有人帮你固定优先级。',
+   learn:'多种方式均能学习；需要主动选择长期方向，防止一直响应外部需求。',
+   collab:'你容易与不同类型的人合作，是团队里的稳定器；需要防止过度迎合。',
+   pressure:'压力下可能过度迎合环境，承担超出职责的期待。',
+   action:'选择一个参数作为年度主题；设定基线行为和目标行为；每月记录一次变化证据。',
+   stretch:'按目标选择', question:'如果未来三年没有环境替你决定，你会主动把自己带向哪里？' }
+];
+
+const INTERACTIONS = [
+ { x:'E', xd:'hi', y:'A', yd:'hi', name:'主动探索', text:'不仅对未知感兴趣，还会主动进入未知。', ex:'看到一个感兴趣的领域，你会先去接触一下，而不是先等一个正式邀请。' },
+ { x:'E', xd:'hi', y:'S', yd:'hi', name:'结构化探索', text:'喜欢探索，但习惯先建立范围、步骤和验证机制。', ex:'进入新领域后，你会很快给自己定下边界和第一批验证动作。' },
+ { x:'E', xd:'hi', y:'D', yd:'hi', name:'深度探索', text:'进入未知之后，可能在值得的问题上持续深入。', ex:'一个新方向吸引你之后，你会在其中挑一个问题长期做下去。' },
+ { x:'A', xd:'hi', y:'C', yd:'hi', name:'社会杠杆', text:'通过关系、协作和资源推动事情发生。', ex:'遇到卡点时，你会先想到谁能提供资源或判断，并主动联系。' },
+ { x:'A', xd:'hi', y:'C', yd:'lo', name:'独立推进', text:'缺少外部支持时，也倾向自行启动。', ex:'没有人牵头时，你会自己先把第一步做出来。' },
+ { x:'R', xd:'hi', y:'S', yd:'hi', name:'计算型冒险', text:'愿意承担风险，但要求经过分析和下行保护。', ex:'你会先算清最坏情况和退出条件，再决定是否下注。' },
+ { x:'R', xd:'hi', y:'S', yd:'lo', name:'高波动探索', text:'速度快、容忍不确定，但需要防止冲动。', ex:'你会边试边看，快速调整方向，很少先做完整体测算。' },
+ { x:'D', xd:'hi', y:'C', yd:'lo', name:'独立专业化', text:'深度可能成为壁垒，但价值可见性不足。', ex:'你在专业上很深，却很少主动对外解释它的价值。' },
+ { x:'D', xd:'hi', y:'C', yd:'hi', name:'知识放大器', text:'既深入，也能通过他人扩大知识影响。', ex:'你愿意把复杂的理解讲给别人，让它不只停在自己手里。' },
+ { x:'S', xd:'hi', y:'A', yd:'hi', name:'系统推动', text:'不仅制定计划，还会让计划转化为行动。', ex:'你列完节点之后，会立刻推动第一步真正发生。' }
+];
+/* ============================================================
+   工具
+   ============================================================ */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const randHex = n => Array.from({length:n}, () => '0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+const pad2 = n => String(n).padStart(2,'0');
+const isHi = v => v >= 61;
+const isLo = v => v <= 39;
+const isMid = v => v >= 40 && v <= 60;
+
+function fmtDate(iso){
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+const DRAFT_KEY = 'lps_v11_draft';
+const RESULT_KEY = 'lps_v11_result';
+
+const S = {
+  ans:{}, bg:{ age:'', stage:'', motivation:[] }, idx:0,
+  result:null, calcTimers:[]
+};
+
+/* ============================================================
+   评分（LPS-A-1.1，确定性规则）
+   ============================================================ */
+function bandIdx(disp){ return disp <= 19 ? 0 : disp <= 39 ? 1 : disp <= 60 ? 2 : disp <= 80 ? 3 : 4; }
+
+function computeResult(ans){
+  const dims = {}, itemsByDim = {};
+  DIMS.forEach(d => {
+    const items = QUESTIONS.filter(q => q.dim === d.k);
+    let sum = 0;
+    items.forEach(q => {
+      const v = Number(ans[q.n]);
+      sum += q.rev ? (6 - v) : v;
+    });
+    const raw = ((sum - 6) / 24) * 100;          // 6 题校正后 6–30 → 0–100
+    const disp = Math.round(raw);                 // 前台整数；后台保留 1 位
+    dims[d.k] = { k:d.k, name:d.name, en:d.en, raw:Math.round(raw*10)/10, disp, band:bandIdx(disp), sum };
+    itemsByDim[d.k] = items;
+  });
+
+  let ranked = ARCHETYPES.map((a,i) => {
+    const dist = Math.sqrt(a.c.reduce((acc,v,j) => acc + Math.pow(dims[DIMS[j].k].disp - v, 2), 0) / 6);
+    return { id:a.id, name:a.name, en:a.en, dist:Math.round(dist*10)/10, sim:Math.max(0, Math.round(100 - dist)), i };
+  }).sort((x,y) => x.dist - y.dist || x.i - y.i);
+
+  const midCount = DIMS.filter(d => dims[d.k].band === 2).length;
+  if (ranked[0].id === 'navigator' && midCount < 4) ranked.push(ranked.shift()); // 15.5 Navigator 规则
+
+  const top3 = ranked.slice(0,3);
+  const primary = ARCHETYPES.find(a => a.id === top3[0].id);
+
+  const interactions = INTERACTIONS.filter(ix => {
+    const a = dims[ix.x].disp, b = dims[ix.y].disp;
+    return (ix.xd === 'hi' ? isHi(a) : isLo(a)) && (ix.yd === 'hi' ? isHi(b) : isLo(b));
+  });
+
+  const sortedDims = DIMS.map(d => dims[d.k]).sort((a,b) => b.disp - a.disp);
+  const hiDims = sortedDims.slice(0,2);
+  const loDims = sortedDims.slice(-1);
+  const gap = sortedDims[0].disp - sortedDims[sortedDims.length-1].disp;
+
+  const tensions = buildTensions(dims);
+
+  const submittedAt = new Date().toISOString();
+  return {
+    responseId: 'LPS-R-' + randHex(10).toUpperCase(),
+    submittedAt,
+    dims, top3, primary, interactions, tensions, hiDims, loDims, gap, midCount,
+    versions: { ...VERSIONS },
+    bg: JSON.parse(JSON.stringify(S.bg))
+  };
+}
+
+/* 参数张力：两个相反方向共同影响同一行为 */
+function buildTensions(d){
+  const t = [];
+  const add = (name, cond, a, b, value, cost, signal) => { if (cond) t.push({name,a,b,value,cost,signal}); };
+
+  add('既想探索未知，又希望掌控未知', isHi(d.E.disp) && isHi(d.S.disp), d.E, d.S,
+    '能把模糊问题很快变得可验证，进入新领域后不至于失序',
+    '可能过早用框架限制真正的新发现，把探索变成执行',
+    '当你开始为一个还没看清的机会写详细计划时');
+
+  add('一个人也能推动，但反馈来得慢', isHi(d.A.disp) && isLo(d.C.disp), d.A, d.C,
+    '缺少外部支持时也能把第一步做出来，不依赖授权',
+    '推进过程中拿不到足够反馈，方向错了也走得很快',
+    '当你连续两周没有和外部的人核对过判断时');
+
+  add('深度是壁垒，但价值不容易被看见', isHi(d.D.disp) && isLo(d.C.disp), d.D, d.C,
+    '在专业上形成难以替代的判断力，抗干扰能力强',
+    '同行以外的人很难理解你在做什么，机会需要别人主动找到你',
+    '当你的成果只有少数人能评价时');
+
+  add('愿意下注，但下行保护偏薄', isHi(d.R.disp) && isLo(d.S.disp), d.R, d.S,
+    '行动速度快，能抓住需要及时进入的窗口',
+    '缺少退出条件和节点检查，尾部风险容易被低估',
+    '当你在没有写清停止条件时就开始投入');
+
+  add('打开得很快，沉淀得较慢', isHi(d.E.disp) && isLo(d.D.disp), d.E, d.D,
+    '能快速接触新领域，并发现别人看不到的连接',
+    '每件事都停在「知道怎么用」，难以形成专业复利',
+    '当你的收藏夹比作品集长得更快时');
+
+  return t.slice(0,2);
+}
+
+/* ============================================================
+   单维解释与文案
+   ============================================================ */
+const CLAUSE = {
+  E:{ hi:'更愿意先进入未知，再在过程中收敛', lo:'更倾向沿已经被验证的路径推进', mid:'会按情境在确定与探索之间切换' },
+  S:{ hi:'用结构和节点降低混乱', lo:'靠临场调整吸收变化', mid:'会先规划关键节点，其余临场调整' },
+  A:{ hi:'条件不成熟时也愿意自己推动', lo:'更尊重时机与既有安排', mid:'先看时机，值得时才主动' },
+  D:{ hi:'愿意在一个问题上待很久', lo:'靠跨域连接形成视角', mid:'围绕几个相关主题往下走' },
+  C:{ hi:'通过人与人的连接放大机会', lo:'更依赖独立判断把事情做完', mid:'既独立推进，也在关键处借力' },
+  R:{ hi:'愿意用确定性换更大的可能性', lo:'优先保护安全边际', mid:'风险算得清时才承担' }
+};
+function clauseFor(d){ return CLAUSE[d.k][d.band <= 1 ? 'lo' : d.band >= 3 ? 'hi' : 'mid']; }
+
+function dimDetail(score){
+  const d = DIMS.find(x => x.k === score.k), b = score.band;
+  const state = b === 2 ? d.midState : (b <= 1 ? d.loState : d.hiState);
+  const value = b === 2 ? `${d.leftValue}，也能${d.rightValue}` : (b <= 1 ? d.leftValue : d.rightValue);
+  const fit   = b === 2 ? `既可能是${d.leftFit}，也可能是${d.rightFit}` : (b <= 1 ? d.leftFit : d.rightFit);
+  const over  = b === 2 ? '在两种情境之间切换时，可能低估自己需要稳定下来的部分' : (b <= 1 ? d.leftOver : d.rightOver);
+  const fix   = b === 2 ? '用最近三个真实场景检查：你更像在哪一端' : (b <= 1 ? d.leftFix : d.rightFix);
+  return { state, value, fit, over, fix, observe:d.observe };
+}
+
+function bandName(d, i){ return d.bands[i]; }
+
+function coreFindings(r){
+  const hi = r.hiDims[0], hi2 = r.hiDims[1], lo = r.loDims[0];
+  const out = [];
+  out.push({
+    tag:'strongest coordinate',
+    title:`${hi.name} ${hi.disp} · ${bandName(DIMS.find(d=>d.k===hi.k), hi.band)}`,
+    text:`在六个维度里，你在${hi.name}上走得最远。${dimDetail(hi).state} 这意味着${dimDetail(hi).value}；代价是${dimDetail(hi).over}。`
+  });
+  if (r.interactions.length){
+    const ix = r.interactions[0];
+    const partner = ix.x === hi.k ? r.dims[ix.y] : r.dims[ix.x];
+    out.push({
+      tag:'parameter interaction',
+      title:ix.name,
+      text:`${ix.text} 你和${partner.name}（${partner.disp}）的组合让这一点更明确：${ix.ex}`
+    });
+  } else {
+    out.push({
+      tag:'range',
+      title:`坐标跨度 ${r.gap} 分`,
+      text:`最高（${hi.name} ${hi.disp}）与最低（${lo.name} ${lo.disp}）相差 ${r.gap} 分。这个跨度比原型名称更能解释你在不同环境里的反差：${dimDetail(lo).state}`
+    });
+  }
+  return out;
+}
+
+function mechanismText(r){
+  const hi = r.hiDims[0], hi2 = r.hiDims[1], lo = r.loDims[0];
+  const ixTxt = r.interactions.length ? `在参数之间，「${r.interactions[0].name}」是最明显的一处强化：${r.interactions[0].text}` : `你的参数之间没有形成特别强的组合信号，这说明结果更依赖情境，而不是某一种固定策略。`;
+  return `<p>${r.primary.name}描述的是这些参数组合起来的行为模式，而不是六个分数中的某一个。</p>` +
+    `<p>你在${hi.name}（${hi.disp}）上${clauseFor(hi)}，在${hi2.name}（${hi2.disp}）上${clauseFor(hi2)}；${lo.name}（${lo.disp}）相对更低，意味着你${CLAUSE[lo.k].lo}——这不是缺陷，而是你分配精力的方式。</p>` +
+    `<p>${ixTxt} 它们共同指向一种更自然的运作方式：${r.primary.position}</p>`;
+}
+
+function stageNote(r){
+  const st = r.bg.stage, mo = r.bg.motivation || [];
+  const map = {
+    student:'你正处在形成工作方式的阶段。这份坐标更适合用来选择第一类环境，而不是现在就把方向定死。',
+    early:'进入职场的前几年，环境对参数的塑形很强。优先选择能让 Natural Zone 成立的环境，比补齐短板更划算。',
+    pro:'在专业深耕期，真正要回答的往往不是「再学什么」，而是「把哪类问题留给自己」。',
+    lead:'在管理或项目角色里，你的参数会通过授权方式、节奏设定和风险边界影响整个团队。',
+    switch:'转换期的关键不是把短板补齐，而是先确认哪类环境能让你的优势直接成立。'
+  };
+  let s = map[st] || '';
+  if (mo.includes('career')) s += '你这次的目标与职业选择有关，所以下面的 Possible Futures 以「选择哪类环境」为主轴。';
+  else if (mo.includes('review')) s += '既然是年度复盘，建议把这份坐标与过去一年真实发生的事件逐条对照。';
+  else if (mo.includes('know')) s += '你更关心自己的行动方式，可以重点读「决策」与「Shadow」两节。';
+  return s;
+}
+
+/* ============================================================
+   视图
+   ============================================================ */
+function show(id){
+  $$('.view').forEach(v => { v.hidden = v.id !== 'view-' + id; });
+  document.body.dataset.view = id;
+  window.scrollTo(0,0);
+}
+
+function go(id){
+  try { history.replaceState(null, '', '#' + id); } catch(e){}
+  show(id);
+}
+
+/* ============================================================
+   开始页与草稿
+   ============================================================ */
+function loadDraft(){
+  try {
+    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+    if (d && d.ts && (Date.now() - d.ts) < 86400000) return d;
+  } catch(e){}
+  return null;
+}
+function saveDraft(){
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ ans:S.ans, bg:S.bg, idx:S.idx, ts:Date.now() })); } catch(e){}
+}
+function answeredCount(){ return Object.keys(S.ans).filter(k => S.ans[k]).length; }
+
+function initStart(){
+  const d = loadDraft();
+  const banner = $('#draft-banner');
+  if (d && Object.keys(d.ans || {}).length){
+    const n = Object.keys(d.ans).length;
+    banner.hidden = false;
+    banner.innerHTML = `<span>检测到上次未完成的测试 · 已答 <b class="mono">${n}</b> / 36</span>
+      <span class="draft-actions"><button type="button" class="btn btn-sm btn-primary" id="btn-resume">继续上次测试</button>
+      <button type="button" class="btn btn-sm btn-ghost" id="btn-restart">重新开始</button></span>`;
+    $('#btn-resume').addEventListener('click', () => {
+      S.ans = d.ans || {}; S.bg = Object.assign({age:'',stage:'',motivation:[]}, d.bg || {}); S.idx = clamp(d.idx || 0, 0, 35);
+      go('quiz'); renderQ();
+    });
+    $('#btn-restart').addEventListener('click', () => {
+      localStorage.removeItem(DRAFT_KEY);
+      S.ans = {}; S.idx = 0; S.bg = {age:'',stage:'',motivation:[]};
+      banner.hidden = true; go('bg'); renderBg();
+    });
+  }
+  if (banner.hidden && S.result){
+    banner.hidden = false;
+    banner.innerHTML = `<span>你有一份测试结果 · <b class="mono">${fmtDate(S.result.submittedAt)}</b></span>
+      <span class="draft-actions"><button type="button" class="btn btn-sm btn-primary" id="btn-view-result">打开完整报告</button></span>`;
+    $('#btn-view-result').addEventListener('click', () => { renderReport(); go('report'); });
+  }
+}
+
+/* ============================================================
+   背景页
+   ============================================================ */
+function renderBg(){
+  $$('.chip-select').forEach(group => {
+    const field = group.dataset.field;
+    $$('.sel-chip', group).forEach(btn => {
+      const v = btn.dataset.value;
+      const on = field === 'motivation' ? S.bg.motivation.includes(v) : S.bg[field] === v;
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  });
+}
+
+function bindBg(){
+  $$('.chip-select').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('.sel-chip'); if (!btn) return;
+      const field = group.dataset.field, v = btn.dataset.value;
+      if (field === 'motivation'){
+        const i = S.bg.motivation.indexOf(v);
+        if (i >= 0) S.bg.motivation.splice(i,1); else S.bg.motivation.push(v);
+      } else {
+        S.bg[field] = (S.bg[field] === v ? '' : v);
+      }
+      renderBg();
+    });
+  });
+  $('#btn-bg-next').addEventListener('click', () => { saveDraft(); go('quiz'); renderQ(); });
+  $('#btn-bg-skip').addEventListener('click', () => {
+    S.bg = {age:'',stage:'',motivation:[]}; renderBg(); saveDraft(); go('quiz'); renderQ();
+  });
+}
+
+/* ============================================================
+   答题
+   ============================================================ */
+function renderQ(){
+  const q = QUESTIONS[S.idx], dim = DIMS.find(d => d.k === q.dim);
+  $('#q-pos').textContent = pad2(S.idx + 1);
+  $('#q-page').textContent = `第 ${Math.floor(S.idx / 6) + 1} 页 · 共 6 页`;
+  $('#q-idx').textContent = 'Q' + pad2(q.n);
+  $('#q-tag').textContent = q.type === 's' ? '情境选择 · 选择后自动进入下一题' : '选择后自动进入下一题';
+  $('#q-text').textContent = q.text.replace(/\s+/g,' ');
+  const cur = S.ans[q.n];
+  const opts = $('#q-opts');
+  opts.innerHTML = '';
+  for (let i = 1; i <= 5; i++){
+    const label = q.type === 's' ? q.opts[i-1] : LIKERT[i-1];
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'opt'; b.setAttribute('role','radio');
+    b.setAttribute('aria-checked', cur === i ? 'true' : 'false');
+    b.innerHTML = `<span class="onum">${i}</span><span class="olabel">${esc(label)}</span>
+      <span class="mark"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span>`;
+    b.addEventListener('click', () => choose(i));
+    opts.appendChild(b);
+  }
+  const done = Math.round((S.idx / 36) * 100);
+  $('#q-bar').style.width = done + '%';
+  $('#q-progress').setAttribute('aria-valuenow', S.idx);
+  $('#btn-prev').disabled = S.idx === 0;
+  $('#q-err').classList.remove('show');
+  $('#q-text').focus?.();
+}
+
+let advanceTimer = null;
+function armAdvance(){
+  clearTimeout(advanceTimer);
+  const at = S.idx;
+  advanceTimer = setTimeout(() => {
+    if (S.idx !== at) return;
+    if (document.body.dataset.view !== 'quiz') return;
+    nextQ();
+  }, S.idx === 35 ? 500 : 320);
+}
+
+function choose(v){
+  const q = QUESTIONS[S.idx];
+  S.ans[q.n] = v;
+  $$('#q-opts .opt').forEach((b,i) => b.setAttribute('aria-checked', i+1 === v ? 'true' : 'false'));
+  $('#q-err').classList.remove('show');
+  saveDraft();
+  armAdvance();
+}
+
+function nextQ(){
+  const q = QUESTIONS[S.idx];
+  if (!S.ans[q.n]){
+    $('#q-err').classList.add('show');
+    return;
+  }
+  if (S.idx === 35){ submit(); return; }
+  S.idx++; saveDraft(); renderQ();
+}
+
+function prevQ(){ clearTimeout(advanceTimer); if (S.idx > 0){ S.idx--; renderQ(); } }
+
+function bindQuiz(){
+  $('#btn-prev').addEventListener('click', prevQ);
+  document.addEventListener('keydown', e => {
+    if (document.body.dataset.view !== 'quiz') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key >= '1' && e.key <= '5'){ choose(Number(e.key)); e.preventDefault(); }
+    else if (e.key === 'Enter'){ nextQ(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft'){ prevQ(); e.preventDefault(); }
+    else if (e.key === 'ArrowRight'){ nextQ(); e.preventDefault(); }
+  });
+}
+
+/* ============================================================
+   提交与计算
+   ============================================================ */
+function submit(){
+  localStorage.removeItem(DRAFT_KEY);
+  S.result = computeResult(S.ans);
+  try { localStorage.setItem(RESULT_KEY, JSON.stringify({ result:S.result, ts:Date.now() })); } catch(e){}
+  runCalc(() => {
+    renderReport();
+    go('report');
+  });
+}
+
+function runCalc(done){
+  go('calc');
+  $('#calc-fallback').style.display = 'none';
+  const steps = $$('#calc-steps .calc-step');
+  steps.forEach(s => s.classList.remove('active','done'));
+  S.calcTimers.forEach(t => clearTimeout(t));
+  S.calcTimers = [];
+  const marks = [0, 300, 620];
+  marks.forEach((ms,i) => {
+    S.calcTimers.push(setTimeout(() => {
+      steps.forEach((s,j) => {
+        s.classList.toggle('active', j === i);
+        s.classList.toggle('done', j < i);
+      });
+    }, ms));
+  });
+  S.calcTimers.push(setTimeout(() => {
+    steps.forEach(s => { s.classList.remove('active'); s.classList.add('done'); });
+    setTimeout(done, 260);
+  }, 980));
+  S.calcTimers.push(setTimeout(() => {
+    const fb = $('#calc-fallback'); if (fb) fb.style.display = 'block';
+  }, 5000));
+}
+
+/* ============================================================
+   六维刻度组件
+   ============================================================ */
+function scaleHTML(d, withHint){
+  const b = d.band, dim = DIMS.find(x => x.k === d.k);
+  const left = d.disp <= 50;
+  const fill = left
+    ? `<div class="fill" style="left:${d.disp}%;width:${50 - d.disp}%"></div>`
+    : `<div class="fill" style="left:50%;width:${d.disp - 50}%"></div>`;
+  return `<div class="scale">
+    <div class="scale-top">
+      <span class="scale-name"><span class="scale-code">${d.k}</span><span class="scale-cn">${dim.name}</span><span class="scale-en">${dim.en}</span></span>
+      <span class="scale-right"><span class="scale-score">${d.disp}</span><span class="scale-band">${bandName(dim, b)}</span></span>
+    </div>
+    <div class="scale-line">
+      <span class="end">${dim.left}</span>
+      <div class="track"><div class="rail"></div>${fill}<div class="mid"></div><div class="dot" style="left:${d.disp}%"></div></div>
+      <span class="end right">${dim.right}</span>
+    </div>
+    ${withHint ? `<p class="hint" style="display:block">${dim.core}</p>` : ''}
+  </div>`;
+}
+
+function radarSVG(dims, size){
+  const cx = 150, cy = 150, R = 104;
+  const keys = ['E','S','A','D','C','R'];
+  const ang = i => (-Math.PI/2) + i * Math.PI/3;
+  const pt = (i, r) => [cx + Math.cos(ang(i)) * r, cy + Math.sin(ang(i)) * r];
+  let rings = '';
+  [0.25,0.5,0.75,1].forEach(f => {
+    const p = keys.map((k,i) => pt(i, R*f).map(n=>n.toFixed(1)).join(',')).join(' ');
+    rings += `<polygon points="${p}" fill="none" stroke="rgba(24,59,86,${f===1?0.22:0.1})" stroke-width="1"/>`;
+  });
+  let axes = '', labels = '', dots = '';
+  keys.forEach((k,i) => {
+    const [x,y] = pt(i,R);
+    axes += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(24,59,86,.16)" stroke-width="1"/>`;
+    const [lx,ly] = pt(i, R+18);
+    const anchor = Math.abs(lx-cx) < 4 ? 'middle' : (lx > cx ? 'start' : 'end');
+    labels += `<text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="${anchor}" font-family="JetBrains Mono, monospace" font-size="9" fill="#667085">${k} ${dims[k].disp}</text>`;
+    const [px,py] = pt(i, R*dims[k].disp/100);
+    dots += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3" fill="#2878B5"/>`;
+  });
+  const poly = keys.map((k,i) => pt(i, R*dims[k].disp/100).map(n=>n.toFixed(1)).join(',')).join(' ');
+  return `<svg viewBox="0 0 300 300" width="${size||300}" height="${size||300}" role="img" aria-label="六维坐标雷达图，数值见左侧文本列表">
+    ${rings}${axes}
+    <polygon points="${poly}" fill="rgba(40,120,181,.12)" stroke="#2878B5" stroke-width="1.4"/>
+    ${dots}${labels}
+  </svg>`;
+}
+
+function dimAccordions(dims){
+  return DIMS.map(d => {
+    const dd = dims[d.k], det = dimDetail(dd);
+    const rows = [
+      ['当前状态', det.state],
+      ['自然优势', det.value],
+      ['适配情境', det.fit],
+      ['过度使用', det.over],
+      ['补偿策略', det.fix],
+      ['可观察行为', det.observe + '。']
+    ];
+    return `<details class="dim-detail">
+      <summary><span class="dm-code">${d.k}</span><span class="dm-name">${d.name}</span>
+        <span class="dm-band">${bandName(d, dd.band)} · ${dd.disp}</span><span class="dm-cue">展开</span></summary>
+      <div class="dim-body">${rows.map(([k,v]) => `<div class="dr"><span class="dk">${k}</span><p>${esc(v)}</p></div>`).join('')}</div>
+    </details>`;
+  }).join('');
+}
+
+/* ============================================================
+   完整报告
+   ============================================================ */
+const RECOVER = {
+  trailblazer:'把当前最重要的一个赌注写成一句话，48 小时内交付一次可见成果。',
+  architect:'先用人工方式跑通一次，再决定要不要建系统。',
+  deepdiver:'把最近的理解写成三页笔记，发给一个真实的人。',
+  synthesizer:'为一个主题连续投入 20 小时，产出一份可被检验的方案。',
+  network:'从联系人里挑一个，完成一次有具体交付的跟进。',
+  operator:'停下一项「做得好但不值得」的任务，重新判断问题本身。',
+  explorer:'给当前兴趣设一个 10 天期限，到期做 Stop / Hobby / Commit。',
+  strategist:'找一个反方角色，用 30 分钟专门攻击你的核心假设。',
+  creator:'把完成度 70% 的版本交给 3 个真实用户，只记录他们的第一反应。',
+  catalyst:'把一项协调工作交给别人，并只保留结果检查。',
+  guardian:'设计一个失败成本很低的试点，用它换一次学习。',
+  navigator:'为一个维度设定三个月主题，写下基线行为和目标行为。'
+};
+
+const PARAM_ACTION = {
+  E:'每季度做一次与当前工作无关的小实验，并提前写下停止条件',
+  S:'为当前最重要的一件事补三个检查点，只检查，不重做计划',
+  A:'每周主动提出一个提案，不等待分配',
+  D:'为一个主题连续投入 20 小时，中间不切换',
+  C:'每两周找两个外部的人核对一次判断',
+  R:'做一次成本可承受的尝试，并预设退出阈值'
+};
+
+function miniHTML(r, k){
+  const d = r.dims[k], dim = DIMS.find(x => x.k === k);
+  const fill = d.disp <= 50
+    ? `<div class="mfill" style="left:${d.disp}%;width:${50-d.disp}%"></div>`
+    : `<div class="mfill" style="left:50%;width:${d.disp-50}%"></div>`;
+  return `<div class="mini">
+    <span class="mk">${k}</span><span class="mn">${dim.name}</span><span class="mv">${d.disp}</span>
+    <div class="mt"><div class="mrail"></div>${fill}<i style="left:${d.disp}%"></i></div>
+  </div>`;
+}
+
+function futures(r){
+  const p = r.primary;
+  const sec = ARCHETYPES.find(a => a.id === r.top3[1].id);
+  const third = ARCHETYPES.find(a => a.id === r.top3[2].id);
+  let pk = /^[ESADCR]/.test(p.stretch) ? p.stretch[0] : (p.id === 'navigator' ? r.hiDims[0].k : 'D');
+  const pd = r.dims[pk], pdim = DIMS.find(d => d.k === pk);
+
+  return [
+    { name:'把 Natural Zone 变成默认环境',
+      text:`用环境特征筛选机会，而不是用职位名称筛选。对你来说，成立的条件通常是：${p.naturalTraits.slice(0,3).join('、')}。${p.naturalText}`,
+      signal:`观察信号：进入新环境 3 个月后，你是否还需要持续消耗意志力才能维持产出。`,
+      cost:`代价：这类环境通常意味着更少的确定性，短期收入或稳定性可能要让位。` },
+    { name:`让 ${sec.name} 补上盲区`,
+      text:`你的主模式是${p.drivers[0]}，而${sec.name}提供的${sec.drivers[0]}正是你较少主动调用的能力。把它作为手段，而不是第二身份：${sec.position}`,
+      signal:`观察信号：当你卡住时，是否开始出现「换个方法」而不是「更努力」的选项。`,
+      cost:`代价：同时扮演两种模式会拉长决策时间，需要限定使用场景。` },
+    { name:`把 ${pdim.name} 移动 10–15 点`,
+      text:`未来 3 个月，把 ${pdim.name}（${pd.disp}）往中间移动 10–15 点：${PARAM_ACTION[pk]}。${third.name}的 Shadow 提醒你，这一步的价值在于补一个边界，而不是换一种人格。`,
+      signal:`观察信号：三个月后复看时，你能举出至少两个具体事件证明位置移动了。`,
+      cost:`代价：移动期间效率会短暂下降，不要在关键交付期启动。` }
+  ];
+}
+
+function questionsFor(r){
+  const qs = [r.primary.question];
+  if (r.tensions.length) qs.push(`如果「${r.tensions[0].name}」这个张力继续存在，你愿意先放弃哪一端的收益？`);
+  else qs.push('如果只看最近三个月的真实选择，你的坐标和这份报告一致吗？哪些地方不一致？');
+  qs.push(r.primary.id === 'navigator'
+    ? '哪个环境特征最能让你的 Natural Zone 成立？如果找不到，你能不能自己造一个？'
+    : '如果未来三年没有环境替你决定，你会主动把自己带向哪里？');
+  return qs;
+}
+
+function actionsFor(r){
+  const parts = r.primary.action.split('；').map(s => s.trim()).filter(Boolean);
+  const stops = [
+    '停止条件：连续两周没有产生任何可观察变化，就把它降级为兴趣。',
+    '停止条件：当它开始占用你 Natural Zone 的核心时间时，暂停。',
+    '停止条件：如果三个月内无法举例说明变化，视为未发生。'
+  ];
+  const extra = [
+    '把这份报告里的一个判断，拿去和一个真实的人核对一次。',
+    '在接下来两周里，只保留一个正在成形的方向，其余明确暂停。'
+  ];
+  const all = parts.slice(0,3);
+  let k = 0;
+  while (all.length < 3 && k < extra.length) all.push(extra[k++]);
+  return all.map((t,i) => ({ text:/。$/.test(t) ? t : t + '。', stop:stops[i] || stops[2] }));
+}
+
+function renderReport(){
+  const r = S.result, p = r.primary;
+  const t3 = r.top3;
+  const sec = ARCHETYPES.find(a => a.id === t3[1].id);
+  const third = ARCHETYPES.find(a => a.id === t3[2].id);
+
+  const lead = t3[0].sim - t3[1].sim;
+  const allClose = lead < 5 && (t3[1].sim - t3[2].sim) < 5;
+  let pairNote;
+  if (allClose){
+    pairNote = `前三原型的差距都小于 5 点，你的结果更像组合配置，而不是单一原型。请优先读坐标与参数交互，把原型名称当作索引而不是身份。`;
+  } else if (lead >= 8){
+    pairNote = `Primary 明确领先 ${lead} 点。${sec.name}更多出现在手段层面：${sec.position}`;
+  } else {
+    pairNote = `Primary 与 Secondary 只差 ${lead} 点，你的结果更像「${p.name} + ${sec.name}」的双原型结构：${p.drivers[0]}与${sec.drivers[0]}共同驱动，而不是其中一种单独起作用。`;
+  }
+
+  const toc = [['s-coord','当前坐标'],['s-arch','前三原型'],['s-mech','整体运作机制'],['s-ix','参数与张力'],['s-zone','Natural Zone'],['s-shadow','Shadow Side'],['s-cap','决策与协作'],['s-future','Possible Futures'],['s-action','思考与建议'],['s-deliver','保存与交付']];
+  $('#report-toc').innerHTML = toc.map(([id,t],i) => `<li><a href="#${id}" data-sec="${id}"><span class="n">${pad2(i+1)}</span>${t}</a></li>`).join('');
+
+  const ixHTML = r.interactions.length
+    ? r.interactions.slice(0,4).map(ix => `<div class="ix-card">
+        <div class="ix-top"><h4>${ix.name}</h4><div class="ix-pair"><em>${ix.x} ${r.dims[ix.x].disp}${ix.xd==='hi'?'↑':'↓'}</em><em>${ix.y} ${r.dims[ix.y].disp}${ix.yd==='hi'?'↑':'↓'}</em></div></div>
+        <p>${ix.text}</p>
+        <div class="ix-minis">${miniHTML(r, ix.x)}${miniHTML(r, ix.y)}</div>
+        <p class="ex"><b>这可能表现为：</b>${ix.ex}</p>
+      </div>`).join('')
+    : `<div class="ix-card"><h4>没有命中强组合</h4><p>你的参数没有形成明显的强化组合，说明行为更多由情境触发。这不是信息缺失，而是你的结果对环境的敏感度更高。</p></div>`;
+
+  const tensionHTML = r.tensions.length
+    ? r.tensions.map(t => `<div class="tension">
+        <h4>${t.name}</h4>
+        <p><b style="font-weight:500">${t.a.k} ${t.a.disp} + ${t.b.k} ${t.b.disp}</b> — ${t.value}；但同时${t.cost}。</p>
+        <div class="kv"><span>出现时</span><b>${t.signal}。</b></div>
+      </div>`).join('')
+    : `<p class="small" style="margin-top:14px">你的参数之间没有出现强烈的相反方向组合。这不意味着没有张力，而是张力更多由具体情境触发，建议结合最近一次重要选择回看。</p>`;
+
+  const capDefs = [
+    ['decision','你如何做决定','M4 4v5a3 3 0 0 0 3 3h13','信息偏好、行动阈值、风险处理'],
+    ['work','你如何工作','M4 7h16M4 12h16M4 17h10','任务结构、自主度、节奏与交付'],
+    ['learn','你如何学习','M4 19V5l8 8 8-8v14','学习深度、反馈方式与成果形式'],
+    ['collab','你如何协作','M9 11a4 4 0 1 0 8 0M3 21c0-3 3-5 9-5s9 2 9 5','信任、沟通与冲突'],
+  ];
+
+  const futuresHTML = futures(r).map((f,i) => `<div class="future">
+      <span class="fn">F0${i+1}</span>
+      <div><h4>${f.name}</h4><p>${f.text}</p>
+        <div class="sig"><span><b>${f.signal.split('：')[0]}</b>${f.signal.split('：').slice(1).join('：')}</span><span><b>${f.cost.split('：')[0]}</b>${f.cost.split('：').slice(1).join('：')}</span></div>
+      </div></div>`).join('');
+
+  const actList = actionsFor(r);
+  const recover = RECOVER[p.id] || '把当前最重要的事写下来，只做这一件，直到出现可见产出。';
+  const sn = stageNote(r);
+  const dims = r.dims;
+
+  $('#report-main').innerHTML = `
+  <div class="rep-hero">
+    <div class="rep-hero-main">
+      <p class="eyebrow">YOUR CURRENT SPACE</p>
+      <div class="rep-you">YOU ARE HERE<small>你现在在这里，但不意味着你永远停在这里。</small></div>
+      <div class="rep-name">${p.name}<span>${p.en}</span></div>
+      <p class="rep-sum">${p.summary}</p>
+      <div class="rep-meta">
+        <span>测试时间 ${fmtDate(r.submittedAt)}</span>
+        <span>问卷 ${r.versions.q}</span>
+        <span>算法 ${r.versions.a}</span>
+        <span>内容 ${r.versions.c}</span>
+        <span>报告 ID ${r.responseId}</span>
+      </div>
+    </div>
+    <aside class="rep-side" aria-label="前三原型相似度">
+      <p class="side-label">ARCHETYPE MATCH</p>
+      ${t3.map((a,i) => `<div class="side-row${i===0?' on':''}"><span class="n">0${i+1}</span><span class="nm">${a.name}</span><span class="sim">${a.sim}</span></div>`).join('')}
+      <p class="side-note">相似度指数 = 100 − 均方根距离，表示距离远近，不是概率。</p>
+    </aside>
+  </div>
+
+  <section class="sec" id="s-coord">
+    <div class="sec-head"><span class="sec-n">01</span><h2>当前坐标</h2><p>六维 · 双端刻度 · 0–100</p></div>
+    <div class="plate">
+      <div class="plate-grid">
+        <div>${DIMS.map(d => scaleHTML(dims[d.k], false)).join('')}</div>
+        <div class="plate-radar">
+          <p class="mono">radar / auxiliary</p>
+          ${radarSVG(dims, 230)}
+          <p class="micro" style="text-align:center;margin-top:6px">雷达图仅作辅助，数值以左侧刻度为准</p>
+        </div>
+      </div>
+    </div>
+    <p class="small" style="margin:16px 0 6px">分数只表示你当前回答呈现的位置，不是能力评分。点开任一维度，可以看到它的优势、代价与补偿策略。</p>
+    ${dimAccordions(dims)}
+  </section>
+
+  <section class="sec" id="s-arch">
+    <div class="sec-head"><span class="sec-n">02</span><h2>前三原型</h2><p>相似度指数，不是概率</p></div>
+    <div class="arch-primary">
+      <div class="top">
+        <h3>${p.name}<span>${p.en} · 典型组合 ${p.tag}</span></h3>
+        <div class="sim"><b>${t3[0].sim}</b><span>原型相似度指数</span></div>
+      </div>
+      <p class="desc">${p.position}　${p.portrait}</p>
+      <div class="combo">${p.drivers.map(d => `<span>${d}</span>`).join('')}</div>
+    </div>
+    <div class="arch-mini">
+      <div class="arch-card">
+        <div class="hd"><h4>Secondary · ${sec.name}</h4><span class="sim">${t3[1].sim}</span></div>
+        <p>${sec.position}</p>
+      </div>
+      <div class="arch-card">
+        <div class="hd"><h4>Third · ${third.name}</h4><span class="sim">${t3[2].sim}</span></div>
+        <p>${third.position}</p>
+      </div>
+    </div>
+    <div class="body-txt" style="margin-top:18px"><p>${pairNote}</p><p>相似度指数 = 100 − 与原型中心的均方根距离。它只表示「有多接近这个原型」，不是概率，也不是准确率；距离相同的结果按预设规则稳定排序。</p></div>
+  </section>
+
+  <section class="sec" id="s-mech">
+    <div class="sec-head"><span class="sec-n">03</span><h2>整体运作机制</h2><p>六个参数如何一起工作</p></div>
+    <div class="minute">
+      <p class="mono">one-minute version</p>
+      <ul>
+        <li><b>一句话：</b>${p.summary}</li>
+        <li><b>最明显的强化：</b>${r.interactions.length ? r.interactions[0].name + '——' + r.interactions[0].text : '参数之间没有强组合，行为更受情境影响'}</li>
+        <li><b>最需要留意的代价：</b>${r.tensions.length ? r.tensions[0].cost : p.shadow}</li>
+      </ul>
+    </div>
+    <div class="body-txt" style="margin-top:18px">${mechanismText(r)}</div>
+    ${sn ? `<div class="stage-note"><span class="mono">for your stage</span><p>${sn}</p></div>` : ''}
+  </section>
+
+  <section class="sec" id="s-ix">
+    <div class="sec-head"><span class="sec-n">04</span><h2>参数强化与内在张力</h2><p>优势为什么会同时带来冲突</p></div>
+    <div class="ix-grid">${ixHTML}</div>
+    ${tensionHTML}
+  </section>
+
+  <section class="sec" id="s-zone">
+    <div class="sec-head"><span class="sec-n">05</span><h2>Natural Zone</h2><p>环境特征，而不是职位清单</p></div>
+    <div class="zone-grid">
+      <div class="zone">
+        <span class="en">natural zone</span>
+        <h4>你的优势在这里自然成立</h4>
+        <div class="chips">${p.naturalTraits.map(t => `<span class="chip dark">${t}</span>`).join('')}</div>
+        <p>${p.naturalText}</p>
+      </div>
+      <div class="zone">
+        <span class="en">misfit zone</span>
+        <h4>这里不是做不了，而是消耗更大</h4>
+        <div class="chips">${['长期消耗','低自主','高重复','规则模糊'].map(t => `<span class="chip bad">${t}</span>`).join('')}</div>
+        <p>${p.misfit}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s-shadow">
+    <div class="sec-head"><span class="sec-n">06</span><h2>Shadow Side</h2><p>优势在什么条件下会过度使用</p></div>
+    <div class="shadow-card">
+      <p class="lead-s">${p.shadow}</p>
+      <div class="kv">
+        <b>触发条件</b><span>${p.shadowTrigger}</span>
+        <b>常见表现</b><span>${p.pressure}</span>
+        <b>恢复动作</b><span>${recover}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s-cap">
+    <div class="sec-head"><span class="sec-n">07</span><h2>决策 · 工作 · 学习 · 协作</h2><p>四种日常场景里的具体表现</p></div>
+    <div class="cap-grid">
+      ${capDefs.map(([k,t,d,sub]) => `<div class="cap-card">
+        <div class="t"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg><h4>${t}</h4></div>
+        <p>${p[k]}</p>
+      </div>`).join('')}
+    </div>
+  </section>
+
+  <section class="sec" id="s-future">
+    <div class="sec-head"><span class="sec-n">08</span><h2>Possible Futures</h2><p>三条路径，不是三个预测</p></div>
+    <div class="futures">${futuresHTML}</div>
+  </section>
+
+  <section class="sec" id="s-action">
+    <div class="sec-head"><span class="sec-n">09</span><h2>思考问题与建议</h2><p>带走的三个问题，加一组可选动作</p></div>
+    <div class="body-txt"><p><b style="color:var(--brand-900);font-weight:600">一个反直觉发现。</b>${r.gap >= 30 ? `你最高（${r.hiDims[0].name} ${r.hiDims[0].disp}）与最低（${r.loDims[0].name} ${r.loDims[0].disp}）相差 ${r.gap} 分——这个跨度比「${p.name}」这个名字更能解释你在不同环境里的反差。` : `你的坐标跨度只有 ${r.gap} 分，${r.midCount} 个维度落在 40–60。这不是没有特点，而是情境敏感：换一个环境，你的位置会明显移动。`}</p></div>
+    <div class="qa-list" style="margin-top:18px">
+      ${questionsFor(r).map((q,i) => `<div class="qa"><span class="qn">Q${i+1}</span><p>${q}</p></div>`).join('')}
+    </div>
+    <div class="action-card" style="margin-top:24px">
+      <span class="flag">P2 · 可选模块</span>
+      <h4>如果想验证一次，可以从这三件小事开始</h4>
+      ${actList.map((a,i) => `<div class="action-item">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+        <div><p>${a.text}</p><p class="stop">${a.stop}</p></div>
+      </div>`).join('')}
+      <p class="micro" style="margin-top:12px">行动建议不需要打卡、不需要复测，也不构成承诺。它只是把上面的机制翻译成可以观察的动作。</p>
+    </div>
+  </section>
+
+  <section class="sec" id="s-deliver">
+    <div class="sec-head"><span class="sec-n">10</span><h2>保存与交付</h2><p>这份报告属于你，可以带走</p></div>
+    <div class="deliver-panel">
+      <h3>交付信息</h3>
+      <div class="deliver-grid">
+        <div class="dstat"><div class="k">报告 ID</div><div class="v">${r.responseId}</div></div>
+        <div class="dstat"><div class="k">生成时间</div><div class="v">${fmtDate(r.submittedAt)}</div></div>
+        <div class="dstat"><div class="k">产品 / 内容版本</div><div class="v">${r.versions.p} / ${r.versions.c}</div></div>
+        <div class="dstat"><div class="k">交付形式</div><div class="v">在线报告 · PDF · 分享卡</div></div>
+      </div>
+      <div class="share-box no-print">
+        <p class="small">PDF 由浏览器在本机直接生成并下载，不弹打印框；分享卡只含原型与六维缩略图，不含 Shadow、背景信息与精确答案。</p>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-pdf">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10M8 10l4 4 4-4M5 18h14"/></svg>生成 PDF
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-share-v">分享卡 · 竖版</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-share-h">分享卡 · 横版</button>
+      </div>
+      <div class="mail-row no-print">
+        <input class="input" type="email" id="mail-input" placeholder="填写邮箱接收报告副本（选填）" aria-label="邮箱">
+        <button type="button" class="btn btn-ghost" id="btn-mail">发送副本</button>
+      </div>
+      <p class="micro no-print" style="margin-top:10px">邮箱仅用于接收这份报告的副本，与回答数据逻辑分离；演示环境不会真的发送邮件。</p>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap" class="no-print">
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-delete">删除我的数据</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-modal="privacy">隐私说明</button>
+      </div>
+    </div>
+    <div class="end-note">
+      <p>这份报告描述的是你当前更自然的选择与行动方式，不是永久标签。你可以保存报告，在需要做重要选择时重新参考。</p>
+      <p>结果受阶段、环境与自我认知影响，不用于临床诊断、招聘筛选或绩效判断。V1 的中心点与阈值是产品假设，会随真实样本修订。</p>
+      <p class="mono">YOU ARE HERE. NOT FOREVER.</p>
+    </div>
+  </section>`;
+
+  bindReport();
+}
+/* ============================================================
+   报告交互：目录、生成 PDF、分享卡、副本、删除
+   ============================================================ */
+function bindReport(){
+  const links = $$('#report-toc a');
+  if ('IntersectionObserver' in window){
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting){
+          links.forEach(l => l.classList.toggle('on', l.dataset.sec === en.target.id));
+        }
+      });
+    }, { rootMargin:'-90px 0px -72% 0px', threshold:0 });
+    $$('.sec').forEach(s => obs.observe(s));
+  }
+  const pdf = $('#btn-pdf');
+  if (pdf) pdf.addEventListener('click', downloadReportPDF);
+  let openedForPrint = null;
+  window.addEventListener('beforeprint', () => {
+    openedForPrint = $$('.dim-detail').filter(d => !d.open);
+    openedForPrint.forEach(d => { d.open = true; });
+  });
+  window.addEventListener('afterprint', () => {
+    if (openedForPrint){ openedForPrint.forEach(d => { d.open = false; }); openedForPrint = null; }
+  });
+  const sv = $('#btn-share-v'), sh = $('#btn-share-h');
+  if (sv) sv.addEventListener('click', () => drawShare('v'));
+  if (sh) sh.addEventListener('click', () => drawShare('h'));
+  const mail = $('#btn-mail');
+  if (mail) mail.addEventListener('click', () => {
+    const v = $('#mail-input').value.trim();
+    if (!v || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ toast('请填写有效的邮箱地址'); return; }
+    toast('已记录到交付队列（演示环境不会真的发送邮件）');
+  });
+  const del = $('#btn-delete');
+  if (del) del.addEventListener('click', () => {
+    if (!window.confirm('删除后，本地答案与结果都会被清除。确定删除吗？')) return;
+    [DRAFT_KEY, RESULT_KEY].forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
+    S.result = null; S.ans = {}; S.idx = 0;
+    toast('已删除本地答案与结果');
+    show('start');
+    try { history.replaceState(null, '', '#start'); } catch(e){}
+  });
+}
+
+/* ============================================================
+   PDF 报告生成（本地绘制，直接下载）
+   ============================================================ */
+const PDFP = { W:1240, H:1754, L:110, R:110, TOP:118, BOT:150 };
+const P_INK = '#1F2937', P_DARK = '#183B56', P_BLUE = '#2878B5', P_MUTED = '#667085',
+      P_LINE = '#E1EBF2', P_SOFT = '#F2F8FC', P_ACC = '#3AA6B9', P_FAINT = '#98A2B3';
+const P_SANS = '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif';
+const P_MONO = 'Menlo,"SF Mono","Courier New",monospace';
+
+function pFont(c, size, weight, mono){
+  c.font = `${weight || 400} ${size}px ${mono ? P_MONO : P_SANS}`;
+}
+
+function pWrap(c, text, maxW){
+  const clean = String(text || '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  const out = [], paras = clean.split('\n');
+  paras.forEach(p => {
+    if (!p) { out.push(''); return; }
+    let line = '';
+    for (const ch of p){
+      if (c.measureText(line + ch).width > maxW && line){
+        if ('，。、；：！？）】」』”’'.includes(ch)) { out.push(line + ch); line = ''; }
+        else { out.push(line); line = ch; }
+      } else line += ch;
+    }
+    if (line) out.push(line);
+  });
+  return out.length ? out : [''];
+}
+
+class PDFB {
+  constructor(){ this.pages = []; this.pageNo = 0; this.canvas = null; this.ctx = null; this.y = 0; }
+  begin(){
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = PDFP.W; this.canvas.height = PDFP.H;
+    const c = this.ctx = this.canvas.getContext('2d');
+    c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, PDFP.W, PDFP.H);
+    this.pageNo++;
+    this.y = PDFP.TOP;
+    pFont(c, 14, 500, true); c.fillStyle = P_BLUE;
+    c.fillText('LIFE PARAMETER SPACE', PDFP.L, 78);
+    pFont(c, 13, 400, false); c.fillStyle = P_FAINT;
+    const t = '人生参数空间 · 完整报告';
+    c.fillText(t, PDFP.W - PDFP.R - c.measureText(t).width, 78);
+    c.strokeStyle = P_LINE; c.beginPath();
+    c.moveTo(PDFP.L, 100); c.lineTo(PDFP.W - PDFP.R, 100); c.stroke();
+  }
+  finish(){
+    if (!this.ctx) return;
+    const c = this.ctx;
+    c.strokeStyle = P_LINE; c.beginPath();
+    c.moveTo(PDFP.L, PDFP.H - 92); c.lineTo(PDFP.W - PDFP.R, PDFP.H - 92); c.stroke();
+    pFont(c, 12, 400, false); c.fillStyle = P_FAINT;
+    c.fillText('非诊断工具 · 仅描述当前回答呈现的倾向', PDFP.L, PDFP.H - 64);
+    const n = String(this.pageNo);
+    c.fillText(n, PDFP.W - PDFP.R - c.measureText(n).width, PDFP.H - 64);
+    this.pages.push(this.canvas.toDataURL('image/jpeg', 0.92));
+    this.canvas = null; this.ctx = null;
+  }
+  ensure(h){
+    if (this.y + h > PDFP.H - PDFP.BOT){ this.finish(); this.begin(); return true; }
+    return false;
+  }
+  para(text, o){
+    o = o || {};
+    const size = o.size || 20, lh = o.line || Math.round(size * 1.62);
+    const maxW = o.maxW || (PDFP.W - PDFP.L - PDFP.R - (o.indent || 0));
+    const weight = o.weight || 400, mono = !!o.mono, color = o.color || P_INK;
+    const c = this.ctx;
+    pFont(c, size, weight, mono);
+    const lines = pWrap(c, text, maxW);
+    lines.forEach(l => {
+      if (this.ensure(lh)) pFont(c, size, weight, mono);
+      this.ctx.fillStyle = color;
+      this.ctx.fillText(l, PDFP.L + (o.indent || 0), this.y);
+      this.y += lh;
+    });
+    this.y += (o.gap || 0);
+  }
+  kv(k, v, o){
+    o = o || {};
+    const lw = o.labelW || 126, size = o.size || 18, lh = 32;
+    const c = this.ctx;
+    pFont(c, size, 400, false);
+    const lines = pWrap(c, v, PDFP.W - PDFP.L - PDFP.R - lw);
+    const h = Math.max(lines.length * lh, lh);
+    this.ensure(h + 6);
+    pFont(c, 15, 500, false); this.ctx.fillStyle = P_MUTED;
+    this.ctx.fillText(k, PDFP.L, this.y);
+    pFont(c, size, 400, false); this.ctx.fillStyle = P_INK;
+    lines.forEach((ln, i) => this.ctx.fillText(ln, PDFP.L + lw, this.y + i * lh));
+    this.y += h + 6;
+  }
+  sub(text, o){
+    o = o || {};
+    this.ensure((o.size || 19) + 34);
+    pFont(this.ctx, o.size || 19, 600, false);
+    this.ctx.fillStyle = o.color || P_DARK;
+    this.ctx.fillText(text, PDFP.L, this.y);
+    this.y += (o.gap || 28);
+  }
+  h2(num, title, sub){
+    if (this.y > PDFP.TOP + 20) this.y += 34;
+    this.ensure(168);
+    const c = this.ctx;
+    pFont(c, 14, 500, true); c.fillStyle = P_BLUE;
+    c.fillText(num, PDFP.L, this.y + 4);
+    pFont(c, 30, 700, false); c.fillStyle = P_DARK;
+    c.fillText(title, PDFP.L + (num ? 62 : 0), this.y + 6);
+    if (sub){
+      pFont(c, 14, 400, false); c.fillStyle = P_MUTED;
+      c.fillText(sub, PDFP.W - PDFP.R - c.measureText(sub).width, this.y + 2);
+    }
+    this.y += 34;
+    c.strokeStyle = P_LINE; c.beginPath();
+    c.moveTo(PDFP.L, this.y + 10); c.lineTo(PDFP.W - PDFP.R, this.y + 10); c.stroke();
+    this.y += 40;
+  }
+  endSec(){ this.y += 18; }
+  radar(cx, cy, rad, dims, opts){
+    opts = opts || {};
+    const c = this.ctx, n = 6;
+    const ang = i => -Math.PI / 2 + i * Math.PI * 2 / n;
+    const pt = (v, i) => [cx + Math.cos(ang(i)) * rad * v / 100, cy + Math.sin(ang(i)) * rad * v / 100];
+    c.strokeStyle = opts.grid || 'rgba(24,59,86,.16)'; c.lineWidth = 1;
+    [20, 40, 60, 80, 100].forEach(v => {
+      c.beginPath();
+      for (let i = 0; i < n; i++){ const [x, y] = pt(v, i); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke();
+    });
+    for (let i = 0; i < n; i++){
+      c.beginPath(); c.moveTo(cx, cy); const [x, y] = pt(100, i); c.lineTo(x, y); c.stroke();
+    }
+    const order = ['E','S','A','D','C','R'];
+    c.beginPath();
+    order.forEach((k, i) => {
+      const v = dims[k].disp, [x, y] = pt(v, i);
+      i ? c.lineTo(x, y) : c.moveTo(x, y);
+    });
+    c.closePath();
+    c.fillStyle = opts.fill || 'rgba(40,120,181,.14)'; c.fill();
+    c.strokeStyle = opts.stroke || P_BLUE; c.lineWidth = 1.6; c.stroke();
+    c.fillStyle = opts.stroke || P_BLUE;
+    order.forEach((k, i) => {
+      const v = dims[k].disp, [x, y] = pt(v, i);
+      c.beginPath(); c.arc(x, y, 3.2, 0, Math.PI * 2); c.fill();
+    });
+    c.fillStyle = opts.label || P_MUTED; pFont(c, 12, 400, true);
+    order.forEach((k, i) => {
+      const v = dims[k].disp, [x0, y0] = pt(114, i);
+      const label = `${k} ${v}`;
+      const w = c.measureText(label).width;
+      c.fillText(label, x0 - w / 2, y0 + 4);
+    });
+  }
+  scale(dim, dd){
+    this.ensure(106);
+    const c = this.ctx, W = PDFP.W - PDFP.L - PDFP.R;
+    pFont(c, 13, 500, true); c.fillStyle = P_BLUE; c.fillText(dim.k, PDFP.L, this.y + 2);
+    pFont(c, 19, 600, false); c.fillStyle = P_INK; c.fillText(dim.name, PDFP.L + 28, this.y + 2);
+    const nameW = c.measureText(dim.name).width;
+    pFont(c, 11, 400, true); c.fillStyle = P_FAINT;
+    c.fillText(dim.en.toUpperCase(), PDFP.L + 28 + nameW + 16, this.y + 2);
+    pFont(c, 22, 500, true); c.fillStyle = P_DARK;
+    const sc = String(dd.disp), sw = c.measureText(sc).width;
+    c.fillText(sc, PDFP.W - PDFP.R - 150 - sw, this.y + 3);
+    pFont(c, 13, 400, false); c.fillStyle = P_MUTED;
+    const bn = bandName(dim, dd.band);
+    c.fillText(bn, PDFP.W - PDFP.R - c.measureText(bn).width, this.y + 2);
+    const by = this.y + 38, bw = W;
+    c.fillStyle = '#EAF3F8'; c.fillRect(PDFP.L, by, bw, 5);
+    const x = PDFP.L + bw * dd.disp / 100;
+    c.fillStyle = P_BLUE;
+    if (dd.disp >= 50) c.fillRect(PDFP.L + bw / 2, by, x - (PDFP.L + bw / 2), 5);
+    else c.fillRect(x, by, PDFP.L + bw / 2 - x, 5);
+    c.beginPath(); c.arc(x, by + 2.5, 6, 0, Math.PI * 2); c.fillStyle = P_BLUE; c.fill();
+    c.strokeStyle = '#FFFFFF'; c.lineWidth = 1.6; c.stroke();
+    pFont(c, 12, 400, false); c.fillStyle = P_MUTED;
+    c.fillText(dim.left, PDFP.L, this.y + 70);
+    const rr = dim.right, rw = c.measureText(rr).width;
+    c.fillText(rr, PDFP.W - PDFP.R - rw, this.y + 70);
+    this.y += 98;
+  }
+  cover(r){
+    const c = this.ctx, p = r.primary, t3 = r.top3;
+    // 背景细网格
+    c.strokeStyle = 'rgba(24,59,86,.045)'; c.lineWidth = 1;
+    for (let x = 0; x <= PDFP.W; x += 76){ c.beginPath(); c.moveTo(x, 0); c.lineTo(x, PDFP.H); c.stroke(); }
+    for (let y = 152; y <= PDFP.H; y += 76){ c.beginPath(); c.moveTo(0, y); c.lineTo(PDFP.W, y); c.stroke(); }
+    this.y = 250;
+    pFont(c, 14, 500, true); c.fillStyle = P_BLUE; c.fillText('YOUR CURRENT SPACE', PDFP.L, this.y);
+    this.y += 56;
+    pFont(c, 52, 500, true); c.fillStyle = P_DARK;
+    let x = PDFP.L;
+    for (const ch of 'YOU ARE HERE'){ c.fillText(ch, x, this.y); x += c.measureText(ch).width + 9; }
+    this.y += 42;
+    pFont(c, 15, 400, false); c.fillStyle = P_MUTED;
+    c.fillText('你现在在这里，但不意味着你永远停在这里。', PDFP.L, this.y);
+    this.y += 74;
+    pFont(c, 38, 700, false); c.fillStyle = P_DARK;
+    c.fillText(p.name, PDFP.L, this.y);
+    const nameW = c.measureText(p.name).width;
+    pFont(c, 13, 400, true); c.fillStyle = P_MUTED;
+    c.fillText(`${p.en.toUpperCase()}  ·  ${p.tag}`, PDFP.L + nameW + 22, this.y);
+    this.y += 42;
+    pFont(c, 20, 400, false); c.fillStyle = P_INK;
+    pWrap(c, p.summary, PDFP.W - 2 * PDFP.L).forEach(l => { c.fillText(l, PDFP.L, this.y); this.y += 32; });
+    this.y += 18;
+    pFont(c, 13, 400, false); c.fillStyle = P_FAINT;
+    const meta = `测试时间 ${fmtDate(r.submittedAt)}　问卷 ${r.versions.q}　算法 ${r.versions.a}　内容 ${r.versions.c}　报告 ID ${r.responseId}`;
+    c.fillText(meta, PDFP.L, this.y);
+    this.y += 46;
+    c.strokeStyle = P_LINE; c.beginPath(); c.moveTo(PDFP.L, this.y); c.lineTo(PDFP.W - PDFP.R, this.y); c.stroke();
+    this.y += 34;
+    pFont(c, 11, 500, true); c.fillStyle = P_MUTED; c.fillText('ARCHETYPE MATCH', PDFP.L, this.y);
+    this.y += 16;
+    t3.forEach((a, i) => {
+      this.y += 44;
+      pFont(c, 11, 400, true); c.fillStyle = P_FAINT; c.fillText('0' + (i + 1), PDFP.L, this.y);
+      pFont(c, 17, i === 0 ? 600 : 400, false); c.fillStyle = P_DARK;
+      c.fillText(a.name, PDFP.L + 36, this.y);
+      pFont(c, 15, 500, true); c.fillStyle = P_BLUE;
+      const s = String(a.sim), sw = c.measureText(s).width;
+      c.fillText(s, PDFP.W - PDFP.R - sw, this.y);
+      c.strokeStyle = P_LINE; c.beginPath(); c.moveTo(PDFP.L, this.y + 14); c.lineTo(PDFP.W - PDFP.R, this.y + 14); c.stroke();
+    });
+    this.y += 34;
+    pFont(c, 11, 400, false); c.fillStyle = P_MUTED;
+    pWrap(c, '相似度指数 = 100 − 均方根距离，表示与原型中心的距离远近，不是概率，也不是准确率。', PDFP.W - 2 * PDFP.L).forEach(l => { c.fillText(l, PDFP.L, this.y); this.y += 20; });
+
+    // 下部：雷达 + 目录
+    const top = 830;
+    pFont(c, 10, 500, true); c.fillStyle = P_MUTED;
+    c.fillText('SIX DIMENSIONS · 0–100', PDFP.L, top);
+    this.radar(PDFP.L + 185, top + 205, 150, r.dims, { grid:'rgba(24,59,86,.12)', fill:'rgba(40,120,181,.10)', stroke:'rgba(40,120,181,.55)', label:P_MUTED });
+
+    const items = ['六维坐标与单维解释','前三原型与差异说明','整体运作机制','参数强化与内在张力','Natural Zone / Misfit Zone','Shadow Side 触发条件','决策 · 工作 · 学习 · 协作','Possible Futures 三条路径','思考问题与可选建议','保存与交付信息'];
+    const lx = 540;
+    pFont(c, 10, 500, true); c.fillStyle = P_MUTED; c.fillText('THIS REPORT INCLUDES', lx, top);
+    items.forEach((t, i) => {
+      const col = i < 5 ? 0 : 1, row = i < 5 ? i : i - 5;
+      const x = lx + col * 300, y = top + 40 + row * 36;
+      pFont(c, 11, 500, true); c.fillStyle = P_FAINT;
+      c.fillText(String(i + 1).padStart(2, '0'), x, y);
+      pFont(c, 13, 400, false); c.fillStyle = P_INK;
+      c.fillText(t, x + 30, y);
+    });
+
+    pFont(c, 11, 400, false); c.fillStyle = P_MUTED;
+    pWrap(c, '这份报告描述的是你当前更自然的选择与行动方式，不是永久标签。你可以保存这份 PDF，在需要做重要选择时重新参考。结果受阶段、环境与自我认知影响，不用于临床诊断、招聘筛选或绩效判断。', PDFP.W - 2 * PDFP.L).forEach((l, i) => {
+      c.fillText(l, PDFP.L, 1310 + i * 24);
+    });
+    pFont(c, 11, 500, true); c.fillStyle = P_FAINT;
+    c.fillText('YOU ARE HERE. NOT FOREVER.', PDFP.L, 1400);
+    pFont(c, 11, 400, false); c.fillStyle = P_FAINT;
+    c.fillText('本 PDF 由浏览器在本机生成 · 共 10 个区块', PDFP.L, PDFP.H - 150);
+  }
+}
+
+function pdfBlobFromPages(pages, w, h){
+  const Wp = 595.28, Hp = 841.89;
+  const chunks = []; let len = 0; const off = [];
+  const strB = s => { const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u; };
+  const push = x => { const b = typeof x === 'string' ? strB(x) : x; chunks.push(b); len += b.length; };
+  const obj = (id, body) => { off[id] = len; push(`${id} 0 obj\n${body}\nendobj\n`); };
+  const bin = durl => { const b = atob(durl.split(',')[1]); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
+
+  push('%PDF-1.4\n'); push(new Uint8Array([0x25, 0xE2, 0xE3, 0xCF, 0xD3, 0x0A]));
+  const n = pages.length;
+  const pids = [], cids = [], iids = [];
+  for (let i = 0; i < n; i++){ pids.push(3 + i * 3); cids.push(4 + i * 3); iids.push(5 + i * 3); }
+  obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+  obj(2, `<< /Type /Pages /Count ${n} /Kids [${pids.map(i => i + ' 0 R').join(' ')}] >>`);
+  pages.forEach((durl, i) => {
+    const img = bin(durl);
+    obj(pids[i], `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${Wp} ${Hp}] /Resources << /XObject << /Im${i} ${iids[i]} 0 R >> /ProcSet [/PDF /ImageC] >> /Contents ${cids[i]} 0 R >>`);
+    const content = `q\n${Wp} 0 0 ${Hp} 0 0 cm\n/Im${i} Do\nQ\n`;
+    obj(cids[i], `<< /Length ${content.length} >>\nstream\n${content}endstream`);
+    off[iids[i]] = len;
+    push(`${iids[i]} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${img.length} >>\nstream\n`);
+    push(img); push('\nendstream\nendobj\n');
+  });
+  const xref = len;
+  push(`xref\n0 ${n * 3 + 3}\n0000000000 65535 f \n`);
+  for (let id = 1; id <= n * 3 + 2; id++) push(String(off[id] || 0).padStart(10, '0') + ' 00000 n \n');
+  push(`trailer\n<< /Size ${n * 3 + 3} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+  return new Blob(chunks, { type: 'application/pdf' });
+}
+
+function buildReportPDF(){
+  const r = S.result, p = r.primary, t3 = r.top3;
+  const sec = ARCHETYPES.find(a => a.id === t3[1].id), third = ARCHETYPES.find(a => a.id === t3[2].id);
+  const dims = r.dims;
+  const b = new PDFB();
+  b.begin();
+
+  /* 封面 */
+  b.cover(r);
+  b.finish(); b.begin();
+
+  /* 01 当前坐标 */
+  b.h2('01', '当前坐标', '六维 · 双端刻度 · 0–100');
+  DIMS.forEach(d => b.scale(d, dims[d.k]));
+  b.y += 6;
+  pFont(b.ctx, 10, 500, true); b.ctx.fillStyle = P_MUTED;
+  b.ctx.fillText('RADAR / AUXILIARY', PDFP.L, b.y);
+  b.radar(PDFP.W / 2, b.y + 178, 128, dims, {});
+  b.y += 348;
+  pFont(b.ctx, 11, 400, false); b.ctx.fillStyle = P_FAINT;
+  const cap = '雷达图仅作辅助，数值以左侧刻度为准。';
+  b.ctx.fillText(cap, PDFP.W / 2 - b.ctx.measureText(cap).width / 2, b.y);
+  b.y += 34;
+  b.para('分数只表示你当前回答呈现的位置，不是能力评分。下面逐项列出每个维度的状态、优势、代价与补偿策略。', { size:16, line:28, color:P_MUTED });
+
+  /* 01 续：单维解释 */
+  b.h2('', '单维解释', '优势 · 代价 · 补偿');
+  DIMS.forEach((d, di) => {
+    const dd = dims[d.k], det = dimDetail(dd);
+    const pg = b.pageNo;
+    if (b.ensure(282) && di > 0){
+      pFont(b.ctx, 13, 400, false); b.ctx.fillStyle = P_MUTED;
+      b.ctx.fillText('单维解释（续）', PDFP.L, b.y + 2);
+      b.y += 30;
+    }
+    pFont(b.ctx, 13, 500, true); b.ctx.fillStyle = P_BLUE;
+    b.ctx.fillText(d.k, PDFP.L, b.y + 2);
+    pFont(b.ctx, 19, 600, false); b.ctx.fillStyle = P_DARK;
+    b.ctx.fillText(d.name, PDFP.L + 26, b.y + 2);
+    pFont(b.ctx, 13, 400, false); b.ctx.fillStyle = P_MUTED;
+    const right = `${bandName(d, dd.band)} · ${dd.disp}`;
+    b.ctx.fillText(right, PDFP.W - PDFP.R - b.ctx.measureText(right).width, b.y + 2);
+    b.y += 32;
+    [['当前状态', det.state], ['自然优势', det.value], ['适配情境', det.fit], ['过度使用', det.over], ['补偿策略', det.fix], ['可观察行为', det.observe + '。']].forEach(([k, v]) => b.kv(k, v));
+    b.y += 10;
+  });
+
+  /* 02 前三原型 */
+  b.h2('02', '前三原型', '相似度指数，不是概率');
+  b.ensure(220);
+  pFont(b.ctx, 22, 700, false); b.ctx.fillStyle = P_DARK;
+  b.ctx.fillText(p.name, PDFP.L, b.y);
+  const pnW = b.ctx.measureText(p.name).width;
+  pFont(b.ctx, 12, 400, true); b.ctx.fillStyle = P_MUTED;
+  b.ctx.fillText(`${p.en.toUpperCase()} · 典型组合 ${p.tag}`, PDFP.L + pnW + 18, b.y - 4);
+  pFont(b.ctx, 16, 500, true); b.ctx.fillStyle = P_BLUE;
+  b.ctx.fillText(String(t3[0].sim), PDFP.W - PDFP.R - 56, b.y);
+  b.y += 34;
+  b.para(`${p.position}　${p.portrait}`, { size:19, line:32 });
+  b.para(`典型组合：${p.drivers.join(' · ')}`, { size:15, line:26, color:P_MUTED, gap:6 });
+  b.y += 10;
+  [[ 'Secondary', sec, t3[1].sim], ['Third', third, t3[2].sim]].forEach(([lab, a, sim]) => {
+    b.ensure(90);
+    pFont(b.ctx, 12, 500, true); b.ctx.fillStyle = P_MUTED;
+    b.ctx.fillText(lab.toUpperCase(), PDFP.L, b.y + 3);
+    pFont(b.ctx, 17, 600, false); b.ctx.fillStyle = P_DARK;
+    b.ctx.fillText(`${a.name}`, PDFP.L + 96, b.y + 3);
+    pFont(b.ctx, 14, 500, true); b.ctx.fillStyle = P_BLUE;
+    b.ctx.fillText(String(sim), PDFP.W - PDFP.R - 26, b.y + 3);
+    b.y += 26;
+    b.para(a.position, { size:16, line:27, color:P_MUTED, gap:14 });
+  });
+  const lead = t3[0].sim - t3[1].sim, allClose = lead < 5 && (t3[1].sim - t3[2].sim) < 5;
+  let pairNote;
+  if (allClose) pairNote = '前三原型的差距都小于 5 点，你的结果更像组合配置，而不是单一原型。请优先读坐标与参数交互，把原型名称当作索引而不是身份。';
+  else if (lead >= 8) pairNote = `Primary 明确领先 ${lead} 点。${sec.name}更多出现在手段层面：${sec.position}`;
+  else pairNote = `Primary 与 Secondary 只差 ${lead} 点，你的结果更像「${p.name} + ${sec.name}」的双原型结构：${p.drivers[0]}与${sec.drivers[0]}共同驱动，而不是其中一种单独起作用。`;
+  b.para(pairNote, { size:17, line:29 });
+  b.para('相似度指数 = 100 − 与原型中心的均方根距离。它只表示「有多接近这个原型」，不是概率，也不是准确率；距离相同的结果按预设规则稳定排序。', { size:14, line:24, color:P_FAINT });
+
+  /* 03 机制 */
+  b.h2('03', '整体运作机制', '六个参数如何一起工作');
+  b.ensure(180);
+  pFont(b.ctx, 10, 500, true); b.ctx.fillStyle = P_MUTED;
+  b.ctx.fillText('ONE-MINUTE VERSION', PDFP.L, b.y);
+  b.y += 22;
+  b.para(`一句话：${p.summary}`, { size:17, line:29 });
+  b.para(`最明显的强化：${r.interactions.length ? r.interactions[0].name + '——' + r.interactions[0].text : '参数之间没有强组合，行为更受情境影响'}`, { size:17, line:29 });
+  b.para(`最需要留意的代价：${r.tensions.length ? r.tensions[0].cost : p.shadow}`, { size:17, line:29, gap:10 });
+  b.para(mechanismText(r), { size:18, line:31 });
+  const sn = stageNote(r);
+  if (sn) b.para(`关于你的阶段：${sn}`, { size:15, line:26, color:P_MUTED });
+
+  /* 04 参数与张力 */
+  b.h2('04', '参数与张力', '强化组合，与相反方向的拉扯');
+  if (r.interactions.length){
+    r.interactions.slice(0, 4).forEach(ix => {
+      b.ensure(150);
+      pFont(b.ctx, 18, 600, false); b.ctx.fillStyle = P_DARK;
+      b.ctx.fillText(ix.name, PDFP.L, b.y);
+      pFont(b.ctx, 12, 400, true); b.ctx.fillStyle = P_BLUE;
+      const pr = `${ix.x} ${dims[ix.x].disp}${ix.xd === 'hi' ? '↑' : '↓'}　${ix.y} ${dims[ix.y].disp}${ix.yd === 'hi' ? '↑' : '↓'}`;
+      b.ctx.fillText(pr, PDFP.W - PDFP.R - b.ctx.measureText(pr).width, b.y - 2);
+      b.y += 30;
+      b.para(ix.text, { size:17, line:29 });
+      b.para(`这可能表现为：${ix.ex}`, { size:15, line:26, color:P_MUTED, gap:16 });
+    });
+  } else {
+    b.para('你的参数没有形成明显的强化组合，说明行为更多由情境触发。这不是信息缺失，而是你的结果对环境的敏感度更高。', { size:17, line:29 });
+  }
+  if (r.tensions.length){
+    b.sub('内在张力');
+    r.tensions.forEach(t => {
+      b.ensure(120);
+      pFont(b.ctx, 17, 600, false); b.ctx.fillStyle = P_DARK;
+      b.ctx.fillText(t.name, PDFP.L, b.y); b.y += 28;
+      b.para(`${t.a.k} ${t.a.disp} + ${t.b.k} ${t.b.disp} — ${t.value}；但同时${t.cost}。`, { size:16, line:27 });
+      b.para(`出现时：${t.signal}。`, { size:14, line:24, color:P_MUTED, gap:14 });
+    });
+  } else {
+    b.para('你的参数之间没有出现强烈的相反方向组合。这不意味着没有张力，而是张力更多由具体情境触发，建议结合最近一次重要选择回看。', { size:16, line:27, color:P_MUTED });
+  }
+
+  /* 05 环境 */
+  b.h2('05', 'Natural Zone / Misfit Zone', '环境特征，而不是职位清单');
+  b.sub('你的优势在这里自然成立');
+  b.para(p.naturalTraits.join(' · '), { size:14, line:24, color:P_BLUE });
+  b.para(p.naturalText, { size:18, line:30, gap:14 });
+  b.sub('这里不是做不了，而是消耗更大');
+  b.para('长期消耗 · 低自主 · 高重复 · 规则模糊', { size:14, line:24, color:'#B42318' });
+  b.para(p.misfit, { size:18, line:30 });
+
+  /* 06 Shadow */
+  b.h2('06', 'Shadow Side', '优势在什么条件下会过度使用');
+  b.para(p.shadow, { size:19, line:32 });
+  b.y += 8;
+  b.kv('触发条件', p.shadowTrigger);
+  b.kv('常见表现', p.pressure);
+  b.kv('恢复动作', RECOVER[p.id] || '把当前最重要的事写下来，只做这一件，直到出现可见产出。');
+
+  /* 07 四场景 */
+  b.h2('07', '决策 · 工作 · 学习 · 协作', '四种日常场景里的具体表现');
+  [['你如何做决定', p.decision], ['你如何工作', p.work], ['你如何学习', p.learn], ['你如何协作', p.collab]].forEach(([k, v]) => {
+    b.sub(k, { size:17, gap:22 });
+    b.para(v, { size:17, line:29, gap:10 });
+  });
+
+  /* 08 三条路径 */
+  b.h2('08', 'Possible Futures', '三条路径，不是三个预测');
+  futures(r).forEach((f, i) => {
+    b.ensure(150);
+    pFont(b.ctx, 11, 500, true); b.ctx.fillStyle = P_BLUE;
+    b.ctx.fillText('F0' + (i + 1), PDFP.L, b.y);
+    pFont(b.ctx, 18, 600, false); b.ctx.fillStyle = P_DARK;
+    b.ctx.fillText(f.name, PDFP.L + 42, b.y); b.y += 30;
+    b.para(f.text, { size:16, line:27 });
+    b.para(`${f.signal}　${f.cost}`, { size:14, line:23, color:P_MUTED, gap:16 });
+  });
+
+  /* 09 问题与建议 */
+  b.ensure(330);
+  b.h2('09', '思考问题与建议', '带走的三个问题，加一组可选动作');
+  const gapLine = r.gap >= 30
+    ? `你最高（${r.hiDims[0].name} ${r.hiDims[0].disp}）与最低（${r.loDims[0].name} ${r.loDims[0].disp}）相差 ${r.gap} 分——这个跨度比「${p.name}」这个名字更能解释你在不同环境里的反差。`
+    : `你的坐标跨度只有 ${r.gap} 分，${r.midCount} 个维度落在 40–60。这不是没有特点，而是情境敏感：换一个环境，你的位置会明显移动。`;
+  b.para(`一个反直觉发现。${gapLine}`, { size:17, line:29, gap:12 });
+  questionsFor(r).forEach((q, i) => {
+    b.ensure(80);
+    pFont(b.ctx, 12, 500, true); b.ctx.fillStyle = P_BLUE;
+    b.ctx.fillText('Q' + (i + 1), PDFP.L, b.y);
+    pFont(b.ctx, 17, 400, false); b.ctx.fillStyle = P_INK;
+    pWrap(b.ctx, q, PDFP.W - PDFP.L - PDFP.R - 42).forEach((l, j) => {
+      b.ctx.fillText(l, PDFP.L + 42, b.y + j * 29);
+    });
+    b.y += Math.max(1, pWrap(b.ctx, q, PDFP.W - PDFP.L - PDFP.R - 42).length) * 29 + 10;
+  });
+  b.ensure(300);
+  b.sub('如果只想验证一次，可以从这三件小事开始');
+  actionsFor(r).forEach((a, i) => {
+    b.ensure(90);
+    pFont(b.ctx, 13, 500, true); b.ctx.fillStyle = P_BLUE;
+    b.ctx.fillText('0' + (i + 1), PDFP.L, b.y + 2);
+    pFont(b.ctx, 16, 400, false); b.ctx.fillStyle = P_INK;
+    const lines = pWrap(b.ctx, a.text, PDFP.W - PDFP.L - PDFP.R - 36);
+    lines.forEach((l, j) => b.ctx.fillText(l, PDFP.L + 36, b.y + j * 26));
+    b.y += lines.length * 26;
+    pFont(b.ctx, 13, 400, false); b.ctx.fillStyle = P_FAINT;
+    const sl = pWrap(b.ctx, a.stop, PDFP.W - PDFP.L - PDFP.R - 36);
+    sl.forEach((l, j) => b.ctx.fillText(l, PDFP.L + 36, b.y + j * 22));
+    b.y += sl.length * 22 + 16;
+  });
+
+  /* 10 交付 */
+  b.h2('10', '保存与交付', '这份报告属于你，可以带走');
+  b.kv('报告 ID', r.responseId);
+  b.kv('生成时间', fmtDate(r.submittedAt));
+  b.kv('产品 / 内容版本', `${r.versions.p} / ${r.versions.c}`);
+  b.kv('交付形式', 'PDF 报告 · 在线报告 · 分享卡');
+  b.y += 8;
+  b.para('这份报告描述的是你当前更自然的选择与行动方式，不是永久标签。你可以保存这份 PDF，在需要做重要选择时重新参考。', { size:16, line:27 });
+  b.para('结果受阶段、环境与自我认知影响，不用于临床诊断、招聘筛选或绩效判断。V1 的中心点与阈值是产品假设，会随真实样本修订。', { size:14, line:24, color:P_MUTED });
+  b.y += 12;
+  b.kv('复测建议', '环境变化后 3 个月复测一次；重大选择前后各测一次，看坐标是否移动', { size:15, labelW:126, line:26 });
+  b.kv('使用边界', '不用于招聘筛选、绩效考核、临床诊断；也不作为评价他人的依据', { size:15, labelW:126, line:26 });
+
+  b.y += 20;
+  b.ensure(120);
+  pFont(b.ctx, 15, 600, false); b.ctx.fillStyle = P_DARK;
+  b.ctx.fillText('这一版还没有做的事', PDFP.L, b.y);
+  b.y += 28;
+  ['没有做常模校准：中心点与五档阈值来自产品假设，不是人群抽样结果。',
+   '没有验证重测信度：短期内重复作答的稳定性，需要真实样本积累后才有结论。',
+   '没有接入真实数据：报告里的建议是解释框架，不是对你具体处境的判断。'
+  ].forEach(t => b.para(t, { size:14, line:24, color:P_MUTED, gap:4 }));
+
+  // 尾部版本信息
+  b.y += 34;
+  b.ctx.strokeStyle = P_LINE; b.ctx.beginPath();
+  b.ctx.moveTo(PDFP.L, b.y); b.ctx.lineTo(PDFP.W - PDFP.R, b.y); b.ctx.stroke();
+  b.y += 28;
+  pFont(b.ctx, 11, 500, true); b.ctx.fillStyle = P_MUTED;
+  b.ctx.fillText('COLOPHON', PDFP.L, b.y);
+  b.y += 24;
+  [['生成方式','浏览器本地 canvas 排版，本机封装为 PDF，无服务端参与'],
+   ['数据留存','结果仅保存在本机浏览器与这份 PDF 中，可随时清除'],
+   ['引用建议','引用时请说明版本号与测试时间，避免脱离上下文使用单一分数']
+  ].forEach(([k, v]) => b.kv(k, v, { size:14, labelW:126, line:25 }));
+
+  // 收束区
+  const boxTop = PDFP.H - 430, boxH = 270;
+  b.ctx.fillStyle = '#F7FAFC'; b.ctx.fillRect(PDFP.L, boxTop, PDFP.W - PDFP.L - PDFP.R, boxH);
+  b.ctx.strokeStyle = P_LINE; b.ctx.strokeRect(PDFP.L, boxTop, PDFP.W - PDFP.L - PDFP.R, boxH);
+  pFont(b.ctx, 11, 500, true); b.ctx.fillStyle = P_BLUE;
+  b.ctx.fillText('YOU ARE HERE. NOT FOREVER.', PDFP.L + 36, boxTop + 52);
+  pFont(b.ctx, 30, 700, false); b.ctx.fillStyle = P_DARK;
+  b.ctx.fillText('你不需要变成另一个人，', PDFP.L + 36, boxTop + 116);
+  b.ctx.fillText('只需要把自己放回更合适的环境。', PDFP.L + 36, boxTop + 166);
+  pFont(b.ctx, 12, 400, true); b.ctx.fillStyle = P_FAINT;
+  b.ctx.fillText('KEEP MOVING · V1.1 · 非诊断工具', PDFP.L + 36, boxTop + 214);
+
+  b.finish();
+  return pdfBlobFromPages(b.pages, PDFP.W, PDFP.H);
+}
+
+function downloadReportPDF(){
+  if (!S.result){ toast('还没有可导出的报告'); return; }
+  const btn = $('#btn-pdf');
+  const old = btn ? btn.innerHTML : '';
+  if (btn){ btn.disabled = true; btn.textContent = '正在生成…'; }
+  toast('正在本机生成 PDF 报告…');
+  setTimeout(() => {
+    try {
+      const blob = buildReportPDF();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `人生参数空间-报告-${S.result.responseId.slice(-6)}.pdf`;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+      toast('PDF 已生成，请查看下载文件');
+    } catch (err) {
+      console.error(err);
+      toast('PDF 生成失败，可改用分享卡或截图保存');
+    } finally {
+      if (btn){ btn.disabled = false; btn.innerHTML = old || '生成 PDF'; }
+    }
+  }, 60);
+}
+
+/* ---------- 分享卡 ---------- */
+function drawShare(kind){
+  const r = S.result, p = r.primary;
+  const c = document.createElement('canvas');
+  const portrait = kind === 'v';
+  c.width = portrait ? 1080 : 1200;
+  c.height = portrait ? 1440 : 628;
+  const g = c.getContext('2d');
+  const W = c.width, H = c.height;
+
+  g.fillStyle = '#F7FAFC'; g.fillRect(0,0,W,H);
+  g.strokeStyle = 'rgba(24,59,86,.055)'; g.lineWidth = 1;
+  for (let x = 0; x < W; x += 72){ g.beginPath(); g.moveTo(x+.5,0); g.lineTo(x+.5,H); g.stroke(); }
+  for (let y = 0; y < H; y += 72){ g.beginPath(); g.moveTo(0,y+.5); g.lineTo(W,y+.5); g.stroke(); }
+
+  const sans = '"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif';
+  const mono = '"JetBrains Mono",ui-monospace,monospace';
+  const pad = portrait ? 88 : 64;
+
+  g.fillStyle = '#183B56';
+  g.fillRect(pad, pad - 14, 26, 26);
+  g.strokeStyle = '#3AA6B9'; g.lineWidth = 1;
+  g.beginPath(); g.arc(pad + 13, pad - 1, 9, 0, Math.PI*2); g.stroke();
+
+  g.font = `500 ${portrait?20:17}px ${mono}`;
+  g.fillStyle = '#183B56';
+  g.fillText('LIFE PARAMETER SPACE', pad + 42, pad + 2);
+  g.font = `400 ${portrait?21:18}px ${sans}`;
+  g.fillStyle = '#667085';
+  g.fillText('人生参数空间 · 我当前的坐标', pad + 42, pad + (portrait?30:26));
+
+  let labelY, nameY, enY, posY, barX, barW, barY, step, labelSize, scoreSize;
+  if (portrait){
+    labelY = 320; nameY = 404; enY = 452; posY = 512;
+    barX = pad; barW = W - pad*2; barY = 720; step = 92;
+    labelSize = 22; scoreSize = 26;
+  } else {
+    labelY = 208; nameY = 272; enY = 306; posY = 350;
+    barX = 690; barW = W - barX - 64; barY = 148; step = 66;
+    labelSize = 17; scoreSize = 21;
+  }
+
+  g.font = `400 ${portrait?28:20}px ${sans}`;
+  g.fillStyle = '#667085';
+  g.fillText('我当前最接近', pad, labelY);
+
+  g.font = `700 ${portrait?92:60}px ${sans}`;
+  g.fillStyle = '#183B56';
+  g.fillText(p.name, pad, nameY);
+
+  g.font = `400 ${portrait?22:18}px ${mono}`;
+  g.fillStyle = '#2878B5';
+  g.fillText(p.en.toUpperCase() + '  ·  ' + r.top3[0].sim, pad, enY);
+
+  g.fillStyle = '#3D4A5C';
+  g.font = `400 ${portrait?30:22}px ${sans}`;
+  const lines = wrapText(g, p.position, portrait ? W - pad*2 : 520, portrait ? 46 : 32).slice(0,3);
+  lines.forEach((ln,i) => g.fillText(ln, pad, posY + i*(portrait?46:32)));
+
+  if (portrait){
+    g.strokeStyle = 'rgba(24,59,86,.18)'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(pad, 668); g.lineTo(W - pad, 668); g.stroke();
+    g.font = `400 19px ${mono}`; g.fillStyle = '#667085';
+    g.fillText('CURRENT COORDINATES · 0–100', pad, 648);
+  }
+
+  ['E','S','A','D','C','R'].forEach((k,i) => {
+    const d = r.dims[k], dim = DIMS.find(x => x.k === k);
+    const y = barY + i*step;
+    g.font = `400 ${labelSize}px ${sans}`;
+    g.fillStyle = '#1F2937';
+    g.fillText(`${k}  ${dim.name}`, barX, y);
+    g.font = `500 ${scoreSize}px ${mono}`;
+    g.fillStyle = '#183B56';
+    g.textAlign = 'right';
+    g.fillText(String(d.disp), barX + barW, y);
+    g.textAlign = 'left';
+
+    g.fillStyle = '#EAF3F8';
+    g.fillRect(barX, y + (portrait?22:18), barW, 6);
+    const startX = barX + barW * 0.5, dotX = barX + barW * (d.disp/100);
+    g.fillStyle = 'rgba(40,120,181,.55)';
+    g.fillRect(Math.min(startX,dotX), y + (portrait?22:18), Math.abs(dotX-startX), 6);
+    g.fillStyle = '#2878B5';
+    g.beginPath(); g.arc(dotX, y + (portrait?25:21), 7, 0, Math.PI*2); g.fill();
+    g.strokeStyle = '#fff'; g.lineWidth = 2;
+    g.beginPath(); g.arc(dotX, y + (portrait?25:21), 6, 0, Math.PI*2); g.stroke();
+  });
+
+  if (portrait){
+    g.textAlign = 'left';
+    g.font = `400 34px ${sans}`; g.fillStyle = '#183B56';
+    g.fillText('找到你现在的位置，而不是定义你是谁。', pad, 1270);
+    g.font = `400 20px ${mono}`; g.fillStyle = '#667085';
+    g.fillText("This isn't who you are. This is where you are.", pad, 1316);
+    g.font = `400 16px ${sans}`; g.fillStyle = '#98A2B3';
+    g.fillText(`非诊断工具 · ${r.versions.q} · ${fmtDate(r.submittedAt)}`, pad, 1364);
+  } else {
+    g.font = `400 20px ${mono}`; g.fillStyle = '#183B56';
+    g.fillText('YOU ARE HERE. NOT FOREVER.', pad, 560);
+    g.font = `400 15px ${sans}`; g.fillStyle = '#98A2B3';
+    g.textAlign = 'right';
+    g.fillText(`非诊断工具 · ${r.versions.q}`, W - 64, 560);
+    g.textAlign = 'left';
+  }
+
+  c.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `人生参数空间-${p.name}-${portrait?'竖版1080x1440':'横版1200x628'}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    toast('分享卡已生成（不含 Shadow、背景信息与精确答案）');
+  }, 'image/png');
+}
+
+function wrapText(ctx, text, maxWidth, lineHeight){
+  const lines = []; let line = '';
+  for (const ch of text){
+    const test = line + ch;
+    if (ctx.measureText(test).width > maxWidth && line){ lines.push(line); line = ch; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+/* ============================================================
+   弹层
+   ============================================================ */
+const MODALS = {
+  about(){
+    return `<h3 id="modal-title">测试说明</h3>
+      <p>人生参数空间是一个原创的个人发展探索工具。它把人格与发展倾向表达为可移动的坐标，而不是固定标签。</p>
+      <h4>它在测量什么</h4>
+      <p>六个连续维度：探索度 E、结构度 S、驱动力 A、深潜度 D、联结度 C、风险度 R。每个维度 6 道题，共 36 题，其中 11 道为反向计分。分数经校正后标准化到 0–100。</p>
+      <h4>它不做什么</h4>
+      <p>它不是经过临床或完整心理测量学验证的诊断量表，不用于招聘淘汰、升职定级、心理诊断或高风险决策。结果只描述你当前回答呈现的倾向，会随阶段与环境移动。</p>
+      <h4>关于原型</h4>
+      <p>12 个原型是坐标空间中的参考中心，用均方根距离计算接近程度。页面上显示的「原型相似度指数」= 100 − 距离，它不是概率，也不是准确率。</p>
+      <h4>答题建议</h4>
+      <p>按过去一年真实的自己回答，而不是「我希望成为的人」。没有标准答案，中间选项（3）同样有效。</p>`;
+  },
+  privacy(){
+    return `<h3 id="modal-title">隐私与数据</h3>
+      <p>本页面为 V1.1 的交互演示版本，所有计算在你的浏览器内完成，回答不会上传到服务器。</p>
+      <h4>收集范围</h4>
+      <p>默认不收集姓名、手机号、精确生日、单位或职位。背景信息（年龄段、当前阶段、动机）均为选填，只用于分组理解结果，不参与人格或原型运算。</p>
+      <h4>本地保存</h4>
+      <p>答题草稿保存在本机浏览器，24 小时后自动失效；提交后草稿会被清除。你可以随时点击「删除我的数据」，清除本地答案与结果。</p>
+      <h4>正式版的数据规则（规划）</h4>
+      <p>匿名 ID 由第一方随机生成，不使用设备指纹；原始回答默认保留 180 天，统计完成后优先匿名化或删除；删除请求在 15 个自然日内处理；报告生成记录仅保留随机报告 ID 与时间戳，不含任何交易信息。</p>
+      <h4>邮箱</h4>
+      <p>只有你主动填写邮箱时才会使用，仅用于接收报告副本，与回答数据逻辑分离。演示环境不会真的发送邮件。</p>`;
+  },
+  versions(){
+    return `<h3 id="modal-title">版本信息</h3>
+      <p>本页面的题库、算法、内容与产品版本独立编号，便于追溯与回滚。</p>
+      <table class="qa-table" style="margin-top:12px">
+        <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+        <tr><th>类型</th><th>版本</th><th>内容</th><th>状态</th><th></th></tr>
+        <tr><td>问卷</td><td>${VERSIONS.q}</td><td>36 题 · 6 维 × 6 · 11 反向</td><td>Published</td><td></td></tr>
+        <tr><td>算法</td><td>${VERSIONS.a}</td><td>校正 → 标准化 → 均方根距离</td><td>Published</td><td></td></tr>
+        <tr><td>内容</td><td>${VERSIONS.c}</td><td>12 原型 · 10 组交互 · 10 区块报告</td><td>Published</td><td></td></tr>
+        <tr><td>产品</td><td>${VERSIONS.p}</td><td>免费完整报告 · 在线 + PDF</td><td>Baseline</td><td></td></tr>
+      </table>
+      <p style="margin-top:14px">Stretch Parameter 与行动实验属于 P2 预留，V1.1 评分链路不计算、不写入、不展示。</p>`;
+  },
+  qa(){
+    const rows = qaCases();
+    const pass = rows.filter(x => x.ok).length;
+    return `<h3 id="modal-title">评分算法自检</h3>
+      <p>按 PRD 14.2 / 14.3 的验收用例，在浏览器内直接跑一遍确定性评分链路。共 ${rows.length} 项检查，通过 <b style="color:var(--success)">${pass}</b> 项。</p>
+      <table class="qa-table">
+        <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+        <tr><th>用例</th><th>输入</th><th>预期</th><th>实际</th><th>结果</th></tr>
+        ${rows.map(x => `<tr><td>${x.name}</td><td>${x.input}</td><td>${x.expect}</td><td>${x.actual}</td><td class="${x.ok?'pass':'fail'}">${x.ok?'PASS':'FAIL'}</td></tr>`).join('')}
+      </table>
+      <div class="qa-pre" style="margin-top:14px">${qaSummary()}</div>
+      <p style="margin-top:12px">自检只覆盖计分与排序，不覆盖权限与交付链路（本页为演示环境，PDF 与分享卡均在本地生成）。</p>`;
+  }
+};
+
+function qaCases(){
+  const all = v => { const a = {}; QUESTIONS.forEach(q => a[q.n] = v); return a; };
+  const mix = (dim, hi) => {
+    const a = {}; QUESTIONS.forEach(q => {
+      if (q.dim !== dim) a[q.n] = 3;
+      else a[q.n] = q.rev ? (hi ? 1 : 5) : (hi ? 5 : 1);
+    });
+    return a;
+  };
+  const out = [];
+  const r3 = computeResult(all(3));
+  const s3 = ['E','S','A','D','C','R'].map(k => r3.dims[k].disp).join('/');
+  out.push({ name:'全中立', input:'所有题 = 3', expect:'6 维 = 50；Navigator 接近', actual:`${s3} · Primary ${r3.primary.name}`, ok: s3 === '50/50/50/50/50/50' && r3.primary.id === 'navigator' });
+  const r5 = computeResult(all(5));
+  const s5 = ['E','S','A','D','C','R'].map(k => r5.dims[k].disp).join('/');
+  out.push({ name:'全选 5', input:'所有题 = 5', expect:'E/S/D/C/R=67，A=83（反向题生效）', actual:s5, ok: s5 === '67/67/83/67/67/67' });
+  const r1 = computeResult(all(1));
+  const s1 = ['E','S','A','D','C','R'].map(k => r1.dims[k].disp).join('/');
+  out.push({ name:'全选 1', input:'所有题 = 1', expect:'E/S/D/C/R=33，A=17', actual:`${s1} · Primary ${r1.primary.name}`, ok: s1 === '33/33/17/33/33/33' });
+  const rh = computeResult(mix('E', true));
+  out.push({ name:'正向高 / 反向低', input:'E 正向 5、反向 1', expect:'E = 100', actual:`E ${rh.dims.E.disp}`, ok: rh.dims.E.disp === 100 });
+  const rl = computeResult(mix('E', false));
+  out.push({ name:'正向低 / 反向高', input:'E 正向 1、反向 5', expect:'E = 0', actual:`E ${rl.dims.E.disp}`, ok: rl.dims.E.disp === 0 });
+
+  const counts = DIMS.map(d => QUESTIONS.filter(q => q.dim === d.k).length);
+  out.push({ name:'维度配题', input:'题库映射', expect:'每维恰好 6 题', actual:counts.join('/'), ok: counts.every(c => c === 6) });
+  const rev = QUESTIONS.filter(q => q.rev).length;
+  out.push({ name:'反向题', input:'题库配置', expect:'11 道反向', actual:`${rev} 道`, ok: rev === 11 });
+  out.push({ name:'原型中心', input:'原型配置', expect:'12 个中心已录入', actual:`${ARCHETYPES.length} 个`, ok: ARCHETYPES.length === 12 });
+  return out;
+}
+
+function qaSummary(){
+  const r3 = computeResult((() => { const a={}; QUESTIONS.forEach(q=>a[q.n]=3); return a; })());
+  const lines = ['LPS-A-1.1 deterministic check', '---', 'all=3 →'];
+  ['E','S','A','D','C','R'].forEach(k => lines.push(`  ${k} = ${r3.dims[k].disp}  (raw ${r3.dims[k].raw})`));
+  lines.push('  top3 = ' + r3.top3.map(t => `${t.name}(${t.sim})`).join(' > '));
+  return lines.join('\n');
+}
+
+function openModal(name){
+  const body = $('#modal-body');
+  body.innerHTML = (MODALS[name] || MODALS.about)();
+  $('#modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  $('#modal-close').focus();
+}
+function closeModal(){
+  $('#modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function bindModals(){
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-modal]');
+    if (t){ e.preventDefault(); openModal(t.dataset.modal); }
+  });
+  $('#modal-close').addEventListener('click', closeModal);
+  $('#modal').addEventListener('click', e => { if (e.target === $('#modal')) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+}
+
+let toastTimer = null;
+function toast(msg){
+  const el = $('#toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+/* ============================================================
+   启动
+   ============================================================ */
+function init(){
+  try {
+    const saved = JSON.parse(localStorage.getItem(RESULT_KEY) || 'null');
+    if (saved && saved.ts && (Date.now() - saved.ts) < 86400000) S.result = saved.result;
+  } catch(e){}
+
+  initStart();
+  bindBg();
+  bindQuiz();
+  bindModals();
+
+  $('#btn-start').addEventListener('click', () => {
+    S.ans = {}; S.idx = 0; S.bg = { age:'', stage:'', motivation:[] };
+    try { localStorage.removeItem(DRAFT_KEY); } catch(e){}
+    const banner = $('#draft-banner'); if (banner) banner.hidden = true;
+    go('bg'); renderBg();
+  });
+
+  const h = (location.hash || '').replace('#','');
+  if (h === 'report' && S.result){ renderReport(); go('report'); }
+  else { show('start'); }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
